@@ -1,137 +1,164 @@
-resource "aws_security_group" "UCPLoadBalancerSG" {
-  name = "ucploadbalancersg"
-  vpc_id = "${var.vpc_id}"
+# Security Groups:
 
-  # Allow HTTPS Inbound Traffic
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
-  }
-}
+resource "aws_security_group" "ddc" {
+  name        = "${var.deployment}_ddc-default"
+  description = "Default Security Group for Docker EE"
+  vpc_id      = "${aws_vpc.docker.id}"
 
-resource "aws_security_group" "DTRLoadBalancerSG" {
-  name = "dtrloadbalancersg"
-  vpc_id = "${var.vpc_id}"
-
-  # Allow HTTPS Inbound Traffic
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
-  }
-}
-
-resource "aws_security_group" "ExternalLoadBalancerSG" {
-  name = "externalloadbalancersg"
-  vpc_id = "${var.vpc_id}"
-
-  # Allow All Inbound Traffic
-  ingress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "-1"
-    cidr_blocks = "${var.remote_access_range}"
-  }
-}
-
-resource "aws_security_group" "ManagerVpcSG" {
-  name = "managervpcsg"
-  vpc_id = "${var.vpc_id}"
-
-  # Allow Manager Inbound and Outbound Traffic
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = "${var.remote_ssh_range}"
   }
+
   ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = "${var.vpc_ip_range}"
+  }
+
+  # Kubernetes API
+  ingress {
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = "${var.vpc_ip_range}"
+  }
+
+  # WinRM HTTP & HTTPS remote access - needed for Ansible
+  ingress {
+    from_port   = 5985
+    to_port     = 5985
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  ingress {
+    from_port   = 5986
+    to_port     = 5986
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  # best to comment RDP access out after initial deployment testing!
+  ingress {
+    from_port   = 3389
+    to_port     = 3389
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true
+  }
+
+  egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "50"
-    cidr_blocks = "${var.vpc_ip_range}"
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
-  ingress {
-    from_port   = 2377
-    to_port     = 2377
-    protocol    = "tcp"
-    cidr_blocks = "${var.vpc_ip_range}"
-  }
-  ingress {
-    from_port   = 4789
-    to_port     = 4789
-    protocol    = "udp"
-    cidr_blocks = "${var.vpc_ip_range}"
-  }
-  ingress {
-    from_port   = 7946
-    to_port     = 7946
-    protocol    = "tcp"
-    cidr_blocks = "${var.vpc_ip_range}"
-  }
-  ingress {
-    from_port   = 7946
-    to_port     = 7946
-    protocol    = "udp"
-    cidr_blocks = "${var.vpc_ip_range}"
+
+  timeouts {
+    delete = "1h"
   }
 }
 
-resource "aws_security_group" "NodeVpcSG" {
-  name = "nodevpcsg"
-  vpc_id = "${var.vpc_id}"
+resource "aws_security_group" "apps" {
+  name        = "${var.deployment}_apps-default"
+  description = "Default Security Group for Docker EE applications"
+  vpc_id      = "${aws_vpc.docker.id}"
 
-  # Allow Nodes Traffic
-  egress = {
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  egress = {
+
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "50"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress = {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "udp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress = {
-    from_port   = 0
-    to_port     = 2374
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  egress = {
-    from_port   = 2376
-    to_port     = 65535
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  ingress = {
-    from_port   = 0
-    to_port     = 65535
     protocol    = "-1"
-    cidr_blocks = "${var.vpc_ip_range}"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  timeouts {
+    delete = "1h"
   }
 }
 
-resource "aws_security_group" "SwarmWideVPC" {
-  name    = "swarmwidevpc"
-  vpc_id  = "${var.vpc_id}"
+resource "aws_security_group" "elb" {
+  name        = "${var.deployment}_elb-default"
+  description = "Default Security Group for Docker EE ELBs"
+  vpc_id      = "${aws_vpc.docker.id}"
 
-  # Swarm Wide Access
-  ingress = {
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  # Kubernetes API
+  ingress {
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  egress {
     from_port   = 0
-    to_port     = 65535
+    to_port     = 0
     protocol    = "-1"
-    cidr_blocks = "${var.vpc_ip_range}"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  timeouts {
+    delete = "1h"
+  }
+}
+
+resource "aws_security_group" "dtr" {
+  name        = "${var.deployment}_dtr-default"
+  description = "Default Security Group for Docker EE DTR ELB"
+  vpc_id      = "${aws_vpc.docker.id}"
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = "${var.remote_access_range}"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  timeouts {
+    delete = "1h"
   }
 }

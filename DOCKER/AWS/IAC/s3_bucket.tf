@@ -1,8 +1,9 @@
-resource "aws_s3_bucket" "DTR Storage Endpoint" {
-  bucket = "${var.dtr_bucket_name}"
-  acl    = "private"
+resource "aws_s3_bucket" "dtr_storage_bucket" {
+  bucket_prefix = "${var.dtr_bucket_name}"
+  acl           = "private"
 
   tags {
-    Name        = "DTR Bucket"
+    Name        = "${var.deployment}-DTRStorage"
+    Environment = "${var.deployment}"
   }
 }

@@ -8,14 +8,29 @@ variable "ami" {
   default = "ami-0d063c6b"
 }
 
-variable "instance_type" {
-  description = "Instance type"
+variable "linux_manager_instance_type" {
+  description = "Manager Instance type"
+  default = "m4.large"
+}
+
+variable "linux_worker_instance_type" {
+  description = "Worker Instance type"
+  default = "m4.large"
+}
+
+variable "dtr_instance_type" {
+  description = "DTR Instance type"
+  default = "m4.large"
+}
+
+variable "windows_worker_instance_type" {
+  description = "Windows Worker Instance type"
   default = "m4.large"
 }
 
 variable "key_path" {
   description = "SSH Public Key path"
-  default = "/Users/eggmuffin/.ssh/id_rsa.pub"
+  default = "/Users/eggmuffin/.ssh/YD-AWS-LAB-LBN.pem"
 }
 
 variable "bootstrap_path" {
@@ -36,11 +51,6 @@ variable "remote_access_range" {
 variable "vpc_ip_range" {
   description = "VPC IP Range"
   default = "172.30.0.0/16"
-}
-
-variable "vpc_id" {
-  description = "VPC ID"
-  default = "vpc-3e04755a"
 }
 
 variable "dtr_bucket_name" {
