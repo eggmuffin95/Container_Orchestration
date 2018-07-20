@@ -1,0 +1,14 @@
+---
+
+- name: "mkfs"
+  filesystem:
+    dev: "{{ docker_storage_volume }}"
+    force: "no"
+    fstype: "ext4"
+
+- name: "Mount /var/lib/docker"
+  mount:
+    fstype: "ext4"
+    path: "/var/lib/docker"
+    src: "{{ docker_storage_volume }}"
+    state: "mounted"

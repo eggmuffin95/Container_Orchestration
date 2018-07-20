@@ -1,0 +1,47 @@
+---
+- name: Check for python repository
+  stat:
+    path: /etc/zypp/repos.d/devel_languages_python.repo
+  register: devel_python_present
+
+- name: Add python repository
+  zypper_repository:
+    repo: https://download.opensuse.org/repositories/devel:languages:python/SLE_{{ ansible_distribution_major_version }}_SP{{ansible_distribution_release}}/devel:languages:python.repo
+    runrefresh: true
+    auto_import_keys: yes
+    disable_gpg_check: yes
+    state: present
+  when: not devel_python_present.stat.exists
+
+- name: Install python pip
+  zypper:
+    name: "{{ package }}"
+    state: present
+  become: true
+  with_items:
+    - python
+    - python-pip
+    - python-virtualenv
+  loop_control:
+    loop_var: package
+  tags:
+    - python
+    - python2
+    - virtualenv
+    - pip
+  retries: 10
+  register: packages_installed
+  until: packages_installed is succeeded
+
+- pip:
+    name: "{{ module }}"
+  with_items:
+    - setuptools
+    - docker-py
+  loop_control:
+    loop_var: module
+  tags:
+    - docker-py
+  retries: 10
+  register: modules_installed
+  until: modules_installed is succeeded

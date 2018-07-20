@@ -1,0 +1,99 @@
+# Docker EE Cluster Topology
+####################################
+linux_ucp_manager_count  = 3
+linux_ucp_worker_count   = 3
+linux_dtr_count          = 3
+windows_ucp_worker_count = 0
+
+deployment               = "docker-ee"                   # VM/Hostname prefix string. Prepended to all resources.
+
+# Docker EE Configuration
+####################################
+ansible_inventory        = "inventory/1.hosts"
+ucp_license_path         = "./docker_subscription.lic"
+ucp_admin_password       = ""                            # If unset, check $ansible_inventory for generated value
+
+# VMware Credentials
+####################################
+vsphere_server           = "<vSphere IP>"
+vsphere_user             = "<vSphere Username>"          # e.g. user@sso.domain
+vsphere_password         = "<vSphere password>"
+vsphere_datastore        = "<name of datastore>"
+
+# VMware Templates for Docker EE
+###################################
+vsphere_linux_template   = "<Linux VM template name>"    # See reference architecture for template requirements
+vsphere_windows_template = "<Windows VM template name>"  # See reference architecture for template requirements
+
+# VM Credentials and Domains
+####################################
+linux_user               = "<User with root privileges>"
+#windows_user             = "Administrator"
+#windows_admin_password   = ""
+#
+vsphere_linux_template_domain      = "<VM domain name>" # Domain name for created Linux VMs, begins with "."
+#vsphere_windows_template_workgroup = "<Windows workgroup>"
+
+# Docker EE VM Settings
+###################################
+#vm_ucp_manager_num_cpus = 4
+#vm_ucp_manager_memory   = 16384
+#vm_ucp_worker_num_cpus  = 2
+#vm_ucp_worker_memory    = 8192
+#vm_dtr_num_cpus         = 4
+#vm_dtr_memory           = 16384
+#vm_lb_num_cpus          = 2
+#vm_lb_memory            = 4096
+
+# Docker EE Uninstallation
+####################################
+#linux_ucp_uninstall_command   = ""
+#windows_ucp_uninstall_command = ""
+#linux_dtr_uninstall_command   = ""
+
+# Load balancer DNS names
+####################################
+#docker_ucp_lb            = "ucp.example.com"
+#docker_dtr_lb            = "dtr.example.com"
+
+# VMware Configuration Options
+###################################
+#vsphere_linked_clone     = true # Speeds up deployment, but has to be disabled if template is without snapshots
+#vsphere_unverified_ssl   = true
+#vsphere_datacenter       = "<name of datacenter>"
+#vsphere_resource_pool    = "Resources"
+#vsphere_vm_folder        = "<path on data center to store VMs>"
+#vm_network               = "VM Network"
+
+
+# OPTIONAL: Database VM
+####################################
+
+# Create a Linux VM for setting up a database
+#linux_database_count = 0
+#vsphere_linux_database_template = "<Database VM template name>" # (optional, can be removed if unused)
+
+# Create a Windows VM for setting up a database
+#windows_database_count = 0
+#vsphere_windows_database_template = "<Database VM template name>" # (optional, can be removed if unused)
+
+# Database VM specific parameters
+#vm_db_num_cpus = "2"
+#vm_db_memory = "4096"
+#vm_db_disk_size = "40"
+
+# OPTIONAL: Build VM
+####################################
+
+# Create a Linux VM for setting up a build server
+#linux_build_server_count = 0
+#vsphere_linux_build_server_template = "<Build server VM template name>" # (optional, can be removed if unused)
+
+# Create a Windows VM for setting up a build server
+#windows_build_server_count = 0
+#vsphere_windows_build_server_template = "<Build server VM template name>" # (optional, can be removed if unused)
+
+# Database VM specific parameters
+#vm_build_num_cpus = "2"
+#vm_build_memory = "8192"
+#vm_build_disk_size = "80"
