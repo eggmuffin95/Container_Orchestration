@@ -1,0 +1,103 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red164\green8\blue3;}
+{\*\expandedcolortbl;;\cssrgb\c71055\c10387\c0;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs24 \cf2 "docker swarm join" requires exactly 1 argument(s).\
+
+\b0 \cf0 See 'docker swarm join --help'.\
+\
+Usage:  docker swarm join [OPTIONS] HOST:PORT\
+\
+Join a swarm as a node and/or manager\
+WARNING: devicemapper: usage of loopback devices is strongly discouraged for production use.\
+         Use `--storage-opt dm.thinpooldev` to specify a custom block storage device.\
+SWARM_ID:\
+WARNING: devicemapper: usage of loopback devices is strongly discouraged for production use.\
+         Use `--storage-opt dm.thinpooldev` to specify a custom block storage device.\
+NODE:\
+Can't connect to primary manager, sleep and try again\
+WARNING: devicemapper: usage of loopback devices is strongly discouraged for production use.\
+         Use `--storage-opt dm.thinpooldev` to specify a custom block storage device.\
+SWARM_STATE=inactive\
+Get Primary Manager IP\
+MANAGER_IP=172.30.11.230\
+
+\b \cf2 /entry.sh: /usr/bin/buoy: /lib/ld-musl-x86_64.so.1: bad ELF interpreter: No such file or directory
+\b0 \cf0 \
+   Secondary Manager complete\
+#================ docker info    ===\
+Containers: 5\
+ Running: 4\
+ Paused: 0\
+ Stopped: 1\
+Images: 5\
+Server Version: 17.03.2-ee-6\
+Storage Driver: devicemapper\
+ Pool Name: docker-202:1-39638340-pool\
+ Pool Blocksize: 65.54 kB\
+ Base Device Size: 10.74 GB\
+ Backing Filesystem: xfs\
+ Data file: /dev/loop0\
+ Metadata file: /dev/loop1\
+ Data Space Used: 3.077 GB\
+ Data Space Total: 107.4 GB\
+ Data Space Available: 12.02 GB\
+ Metadata Space Used: 5.034 MB\
+ Metadata Space Total: 2.147 GB\
+ Metadata Space Available: 2.142 GB\
+ Thin Pool Minimum Free Space: 10.74 GB\
+ Udev Sync Supported: true\
+ Deferred Removal Enabled: false\
+ Deferred Deletion Enabled: false\
+ Deferred Deleted Device Count: 0\
+ Data loop file: /var/lib/docker/devicemapper/devicemapper/data\
+ Metadata loop file: /var/lib/docker/devicemapper/devicemapper/metadata\
+ Library Version: 1.02.140-RHEL7 (2017-05-03)\
+Logging Driver: json-file\
+Cgroup Driver: cgroupfs\
+Plugins:\
+ Volume: local\
+ Network: bridge host macvlan null overlay\
+Swarm: inactive\
+Runtimes: runc\
+Default Runtime: runc\
+Init Binary: docker-init\
+containerd version: 6c463891b1ad274d505ae3bb738e530d1df2b3c7\
+runc version: 54296cf40ad8143b62dbcaa1d90e520a2136ddfe\
+init version: 949e6fa\
+Security Options:\
+ seccomp\
+  Profile: default\
+Kernel Version: 3.10.0-514.16.1.el7.x86_64\
+Operating System: CentOS Linux 7 (Core)\
+OSType: linux\
+Architecture: x86_64\
+CPUs: 2\
+Total Memory: 7.388 GiB\
+Name: ip-172-30-10-92.eu-west-1.compute.internal\
+ID: QOLI:LBJB:OXRF:35J6:IRVM:FOXL:5QOX:T53J:TDWZ:MJKD:RK5C:A7LY\
+Docker Root Dir: /var/lib/docker\
+Debug Mode (client): false\
+Debug Mode (server): false\
+Registry: https://index.docker.io/v1/\
+Labels:\
+ os=linux\
+ region=eu-west-1\
+ availability_zone=eu-west-1a\
+ instance_type=m4.large\
+ node_type=manager\
+Experimental: false\
+Insecure Registries:\
+ 127.0.0.0/8\
+Live Restore Enabled: false\
+\
+WARNING: devicemapper: usage of loopback devices is strongly discouraged for production use.\
+         Use `--storage-opt dm.thinpooldev` to specify a custom block storage device.\
+#================ docker node ls ===\
+Error response from daemon: This node is not a swarm manager. Use "docker swarm init" or "docker swarm join" to connect this node to swarm and try again.\
+#===================================\
+DDC is installed, it will lets AWS know that the server is ready, when it's ready.\
+Complete Swarm setup}

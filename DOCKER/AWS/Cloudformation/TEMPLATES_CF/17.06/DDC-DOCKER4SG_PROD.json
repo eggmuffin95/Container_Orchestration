@@ -1,0 +1,3679 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Conditions": {
+        "CloudStorEBSSelected": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnableCloudStorEBS"
+                },
+                "yes"
+            ]
+        },
+        "CloudStorEFSSelected": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnableCloudStorEFS"
+                },
+                "yes"
+            ]
+        },
+        "EFSSupported": {
+            "Fn::Equals": [
+                {
+                    "Fn::FindInMap": [
+                        "AWSRegion2AZ",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "EFSSupport"
+                    ]
+                },
+                "yes"
+            ]
+        },
+        "CreateLogResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "EnableCloudWatchLogs"
+                },
+                "yes"
+            ]
+        },
+        "HasOnly2AZs": {
+            "Fn::Equals": [
+                {
+                    "Fn::FindInMap": [
+                        "AWSRegion2AZ",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "NumAZs"
+                    ]
+                },
+                "2"
+            ]
+        },
+        "InstallCloudStorEFSPreReqs": {
+            "Fn::And": [
+                {
+                    "Condition": "EFSSupported"
+                },
+                {
+                    "Condition": "CloudStorEFSSelected"
+                }
+            ]
+        }
+    },
+    "Description": "Docker4SG Platorm Deployment By Yann DANIEL",
+    "Mappings": {
+        "AWSInstanceType2Arch": {
+            "c3.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "c3.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "c3.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "c3.large": {
+                "Arch": "HVM64"
+            },
+            "c3.xlarge": {
+                "Arch": "HVM64"
+            },
+            "c4.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "c4.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "c4.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "c4.large": {
+                "Arch": "HVM64"
+            },
+            "c4.xlarge": {
+                "Arch": "HVM64"
+            },
+            "cc2.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "cr1.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "d2.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "d2.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "d2.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "d2.xlarge": {
+                "Arch": "HVM64"
+            },
+            "g2.2xlarge": {
+                "Arch": "HVMG2"
+            },
+            "hi1.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "hs1.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "i2.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "i2.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "i2.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "i2.xlarge": {
+                "Arch": "HVM64"
+            },
+            "i3.16xlarge": {
+                "Arch": "HVM64"
+            },
+            "i3.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "i3.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "i3.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "i3.large": {
+                "Arch": "HVM64"
+            },
+            "i3.xlarge": {
+                "Arch": "HVM64"
+            },
+            "m3.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "m3.large": {
+                "Arch": "HVM64"
+            },
+            "m3.medium": {
+                "Arch": "HVM64"
+            },
+            "m3.xlarge": {
+                "Arch": "HVM64"
+            },
+            "m4.10xlarge": {
+                "Arch": "HVM64"
+            },
+            "m4.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "m4.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "m4.large": {
+                "Arch": "HVM64"
+            },
+            "m4.xlarge": {
+                "Arch": "HVM64"
+            },
+            "r3.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "r3.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "r3.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "r3.large": {
+                "Arch": "HVM64"
+            },
+            "r3.xlarge": {
+                "Arch": "HVM64"
+            },
+            "r4.16xlarge": {
+                "Arch": "HVM64"
+            },
+            "r4.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "r4.4xlarge": {
+                "Arch": "HVM64"
+            },
+            "r4.8xlarge": {
+                "Arch": "HVM64"
+            },
+            "r4.large": {
+                "Arch": "HVM64"
+            },
+            "r4.xlarge": {
+                "Arch": "HVM64"
+            },
+            "t2.2xlarge": {
+                "Arch": "HVM64"
+            },
+            "t2.large": {
+                "Arch": "HVM64"
+            },
+            "t2.medium": {
+                "Arch": "HVM64"
+            },
+            "t2.micro": {
+                "Arch": "HVM64"
+            },
+            "t2.small": {
+                "Arch": "HVM64"
+            },
+            "t2.xlarge": {
+                "Arch": "HVM64"
+            }
+        },
+        "AWSRegion2AZ": {
+            "ap-northeast-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Tokyo",
+                "NumAZs": "2"
+            },
+            "ap-northeast-2": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Seoul",
+                "NumAZs": "2"
+            },
+            "ap-south-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Mumbai",
+                "NumAZs": "2"
+            },
+            "ap-southeast-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Singapore",
+                "NumAZs": "2"
+            },
+            "ap-southeast-2": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "2",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Sydney",
+                "NumAZs": "3"
+            },
+            "ca-central-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "no",
+                "Name": "Central",
+                "NumAZs": "2"
+            },
+            "eu-central-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Frankfurt",
+                "NumAZs": "2"
+            },
+            "eu-west-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "2",
+                "EFSSupport": "yes",
+                "LambdaSupport": "yes",
+                "Name": "Ireland",
+                "NumAZs": "3"
+            },
+            "eu-west-2": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "London",
+                "NumAZs": "2"
+            },
+            "sa-east-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "no",
+                "Name": "Sao Paulo",
+                "NumAZs": "2"
+            },
+            "us-east-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "2",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "N. Virgina",
+                "NumAZs": "4"
+            },
+            "us-east-2": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "2",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Ohio",
+                "NumAZs": "3"
+            },
+            "us-gov-west-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "no",
+                "Name": "GovCloud",
+                "NumAZs": "2"
+            },
+            "us-west-1": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "0",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "N. California",
+                "NumAZs": "2"
+            },
+            "us-west-2": {
+                "AZ0": "0",
+                "AZ1": "1",
+                "AZ2": "2",
+                "EFSSupport": "no",
+                "LambdaSupport": "yes",
+                "Name": "Oregon",
+                "NumAZs": "3"
+            }
+        },
+        "AWSRegionArch2AMI": {
+            "ap-northeast-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "ap-northeast-2": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "ap-south-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "ap-southeast-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "ap-southeast-2": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "ca-central-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "eu-central-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "eu-west-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "eu-west-2": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "sa-east-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-east-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-east-2": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-1": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            },
+            "us-west-2": {
+                "HVM64": "ami-061b1560",
+                "HVMG2": "NOT_SUPPORTED"
+            }
+        },
+        "DockerForAWS": {
+            "version": {
+                "DTRINITTAG": "17.03.2-ee-6-aws1",
+                "DTRTAG": "2.2.8",
+                "HasDDC": "yes",
+                "UCPINITTAG": "17.03.2-ee-6-aws1",
+                "UCPTAG": "2.1.5",
+                "CloudStorEBSVersion": "17.03.2-ee-6-rc1-aws1",
+                "CloudStorEFSVersion": "17.03.2-ee-6-rc1-aws1",
+                "addOn": "ddc",
+                "channel": "stable-ddc",
+                "docker": "17.02.2-ee-6",
+                "forAws": "17.03.2-ee-6-aws1"
+            }
+        },
+        "VpcCidrs": {
+            "SubnetSwarm1": {
+                "cidr": "172.30.10.0/24"
+            },
+            "SubnetSwarm2": {
+                "cidr": "172.30.11.0/24"
+            },
+            "SubnetSwarm3": {
+                "cidr": "172.30.12.0/24"
+            },
+            "SubnetExternal1": {
+                "cidr": "172.30.13.0/24"
+            },
+            "SubnetExternal2" : {
+                "cidr": "172.30.14.0/24"
+            },
+            "SubnetExternal3" : {
+                "cidr": "172.30.15.0/24"
+            },
+            "SubnetUCP1" : {
+                "cidr": "172.30.16.0/24"
+            },
+            "SubnetUCP2" : {
+                "cidr": "172.30.17.0/24"
+            },
+            "SubnetUCP3" : {
+                "cidr": "172.30.18.0/24"
+            },
+            "SubnetDTR1" : {
+                "cidr": "172.30.19.0/24"
+            },
+            "SubnetDTR2" : {
+                "cidr": "172.30.20.0/24"
+            },
+            "SubnetDTR3" : {
+                "cidr": "172.30.21.0/24"
+            },
+            "vpc": {
+                "cidr": "172.30.0.0/16"
+            }
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Swarm Size"
+                    },
+                    "Parameters": [
+                        "ManagerSize",
+                        "ClusterSize"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Swarm Properties"
+                    },
+                    "Parameters": [
+                        "KeyName",
+                        "RemoteSSH",
+                        "EnableSystemPrune",
+                        "EnableCloudWatchLogs",
+                        "EnableCloudStorEBS",
+                        "EnableCloudStorEFS",
+                        "EnableDynatrace",
+                        "DynatraceVersion",
+                        "DynatraceURL"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Swarm Manager Properties"
+                    },
+                    "Parameters": [
+                        "ManagerInstanceType",
+                        "ManagerRootDiskSize",
+                        "ManagerRootDiskType",
+                        "ManagerDataDiskSize",
+                        "ManagerDataDiskType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Swarm Worker Properties"
+                    },
+                    "Parameters": [
+                        "InstanceType",
+                        "WorkerRootDiskSize",
+                        "WorkerRootDiskType",
+                        "WorkerDataDiskSize",
+                        "WorkerDataDiskType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "VPC/Network"
+                    },
+                    "Parameters": [
+                        "Vpc",
+                        "VpcCidr",
+                        "AssignPublicIpsToInstances",
+                        "InternalorPublicELB",
+                        "SubnetSwarmAz1",
+                        "SubnetSwarmAz2",
+                        "SubnetSwarmAz3",
+                        "SubnetExternalAz1",
+                        "SubnetExternalAz2",
+                        "SubnetExternalAz3",
+                        "SubnetUCPAz1",
+                        "SubnetUCPAz2",
+                        "SubnetUCPAz3",
+                        "SubnetDTRAz1",
+                        "SubnetDTRAz2",
+                        "SubnetDTRAz3"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "HTTP Proxy"
+                    },
+                    "Parameters": [
+                        "HTTPProxy",
+                        "HTTPSProxy",
+                        "NoProxy"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "DDC Properties"
+                    },
+                    "Parameters": [
+                        "DDCUsernameSet",
+                        "DDCPasswordSet",
+                        "License",
+                        "SelinuxURL",
+                        "DockerEEURL"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "ClusterSize": {
+                    "default": "Number of Swarm worker nodes?"
+                },
+                "DDCPasswordSet": {
+                    "default": "Enter your Docker Datacenter password"
+                },
+                "DDCUsernameSet": {
+                    "default": "Enter the Username you want to use with Docker Datacenter"
+                },
+                "EnableCloudStorEBS": {
+                    "default": "Setup CloudStor for EBS Plugin on Swarm Nodes"
+                },
+                "EnableCloudStorEFS": {
+                    "default": "Setup CloudStor for EFS Plugin on Swarm Nodes"
+                },
+                "EnableCloudWatchLogs": {
+                    "default": "Use Cloudwatch for container logging?"
+                },
+                "EnableSystemPrune": {
+                    "default": "Enable daily resource cleanup?"
+                },
+                "EnableDynatrace": {
+                  "default": "Enable Dynatrace APM"
+                },
+                "DynatraceVersion": {
+                  "default": "Enter your Dynatrace package name"
+                },
+                "DynatraceURL": {
+                  "default": "Enter your Dynatrace Download URL"
+                },
+                "HTTPProxy": {
+                    "default": "Value for HTTP_PROXY environment variable."
+                },
+                "HTTPSProxy": {
+                    "default": "Value for HTTPS_PROXY environment variable."
+                },
+                "NoProxy": {
+                    "default": "Value for NO_PROXY environment variable."
+                },
+                "InstanceType": {
+                    "default": "Agent worker instance type?"
+                },
+                "KeyName": {
+                    "default": "Which SSH key to use?"
+                },
+                "License": {
+                    "default": "Enter your Docker Datacenter License"
+                },
+                "SelinuxURL": {
+                    "default": "Enter your Selinux for Docker EE Download URL"
+                },
+                "DockerEEURL": {
+                    "default": "Enter your Docker EE Download URL"
+                },
+                "ManagerRootDiskSize": {
+                    "default": "Manager Root Volume Size?"
+                },
+                "ManagerRootDiskType": {
+                    "default": "Manager Root Volume Type"
+                },
+                "ManagerDataDiskSize": {
+                    "default": "Manager Data Volume Size?"
+                },
+                "ManagerDataDiskType": {
+                    "default": "Manager Data Volume Type"
+                },
+                "ManagerInstanceType": {
+                    "default": "Swarm manager instance type?"
+                },
+                "ManagerSize": {
+                    "default": "Number of Swarm managers?"
+                },
+                "WorkerRootDiskSize": {
+                    "default": "Worker Root Volume Size?"
+                },
+                "WorkerRootDiskType": {
+                    "default": "Worker Root Volume Type"
+                },
+                "WorkerDataDiskSize": {
+                    "default": "Worker Data Volume Size?"
+                },
+                "WorkerDataDiskType": {
+                    "default": "Worker Data Volume Type"
+                },
+                "AssignPublicIpsToInstances": {
+                    "default": "Assign Public IPs to Docker Instances?"
+                },
+                "InternalorPublicELB": {
+                    "default": "Define Internet-Facing or Internal ELB"
+                },
+                "SubnetSwarmAz1": {
+                    "default": "Subnet Swarm 1"
+                },
+                "SubnetSwarmAz2": {
+                    "default": "Subnet Swarm 2"
+                },
+                "SubnetSwarmAz3": {
+                    "default": "Subnet Swarm 3"
+                },
+                "SubnetExternalAz1": {
+                    "default": "Subnet External 1"
+                },
+                "SubnetExternalAz2": {
+                    "default": "Subnet External 2"
+                },
+                "SubnetExternalAz3": {
+                    "default": "Subnet External 3"
+                },
+                "SubnetUCPAz1": {
+                    "default": "Subnet UCP 1"
+                },
+                "SubnetUCPAz2": {
+                    "default": "Subnet UCP 2"
+                },
+                "SubnetUCPAz3": {
+                    "default": "Subnet UCP 3"
+                },
+                "SubnetDTRAz1": {
+                    "default": "Subnet DTR 1"
+                },
+                "SubnetDTRAz2": {
+                    "default": "Subnet DTR 2"
+                },
+                "SubnetDTRAz3": {
+                    "default": "Subnet DTR 3"
+                },
+                "RemoteSSH": {
+                    "default": "Which IPs are allowed to SSH? [0.0.0.0/0 will allow SSH from anywhere]"
+                },
+                "Vpc": {
+                    "default": "VPC"
+                },
+                "VpcCidr": {
+                    "default": "VPC CIDR Range"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "DDCUsername": {
+            "Description": "Docker Datacenter Username",
+            "Value": {
+                "Ref": "DDCUsernameSet"
+            }
+        },
+        "DTRLoginURL": {
+            "Description": "Docker Datacenter DTR Login URL",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt": [
+                                "DTRLoadBalancer",
+                                "DNSName"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        },
+        "DefaultDNSTarget": {
+            "Description": "Use this name to update your DNS records",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ExternalLoadBalancer",
+                    "DNSName"
+                ]
+            }
+        },
+        "ELBDNSZoneID": {
+            "Description": "Use this zone ID to update your DNS records",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ExternalLoadBalancer",
+                    "CanonicalHostedZoneNameID"
+                ]
+            }
+        },
+        "ManagerSecurityGroupID": {
+            "Description": "SecurityGroup ID of ManagerVpcSG",
+            "Value": {
+                "Ref": "ManagerVpcSG"
+            }
+        },
+        "Managers": {
+            "Description": "You can see the manager nodes associated with this cluster here. Follow the instructions here: https://docs.docker.com/docker-for-aws/deploy/",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        ".console.aws.amazon.com/ec2/v2/home?region=",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "#Instances:tag:aws:autoscaling:groupName=",
+                        {
+                            "Ref": "ManagerAsg"
+                        },
+                        ";sort=desc:dnsName"
+                    ]
+                ]
+            }
+        },
+        "NodeSecurityGroupID": {
+            "Description": "SecurityGroup ID of NodeVpcSG",
+            "Value": {
+                "Ref": "NodeVpcSG"
+            }
+        },
+        "SwarmWideSecurityGroupID": {
+            "Description": "SecurityGroup ID of SwarmWideSG",
+            "Value": {
+                "Ref": "SwarmWideSG"
+            }
+        },
+        "UCPLoginURL": {
+            "Description": "Docker Datacenter UCP Login URL",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Fn::GetAtt": [
+                                "UCPLoadBalancer",
+                                "DNSName"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        },
+        "ZoneAvailabilityComment": {
+            "Description": "Availabilty Zones Comment",
+            "Value": {
+                "Fn::If": [
+                    "HasOnly2AZs",
+                    "This region only has 2 Availabiliy Zones (AZ). If one of those AZs goes away, it will cause problems for your Swarm Managers. Please use a Region with at least 3 AZs.",
+                    "This region has at least 3 Availability Zones (AZ). This is ideal to ensure a fully functional Swarm in case you lose an AZ."
+                ]
+            }
+        }
+    },
+    "Parameters": {
+        "ClusterSize": {
+            "Default": "3",
+            "Description": "Number of worker nodes in the Swarm (0-1000).",
+            "MaxValue": "1000",
+            "MinValue": "0",
+            "Type": "Number"
+        },
+        "DDCPasswordSet": {
+            "ConstraintDescription": "must be at least 8 characters",
+            "Description": "Docker Datacenter Password?",
+            "MaxLength": "40",
+            "MinLength": "8",
+            "NoEcho": true,
+            "Type": "String"
+        },
+        "DDCUsernameSet": {
+            "ConstraintDescription": "Please enter the username you want to use for Docker Datacenter",
+            "Default": "admin",
+            "Description": "Docker Datacenter Username?",
+            "Type": "String"
+        },
+        "EnableCloudStorEBS": {
+            "AllowedValues": [
+                "no",
+                "yes"
+            ],
+            "Default": "no",
+            "Description": "Deploy CloudStor for EBS Plugin on Swarm Nodes",
+            "Type": "String"
+        },
+        "EnableCloudStorEFS": {
+            "AllowedValues": [
+                "no",
+                "yes"
+            ],
+            "Default": "no",
+            "Description": "Deploy CloudStor for EFS Plugin on Swarm Nodes",
+            "Type": "String"
+        },
+        "EnableCloudWatchLogs": {
+            "AllowedValues": [
+                "no",
+                "yes"
+            ],
+            "Default": "no",
+            "Description": "Send all Container logs to CloudWatch",
+            "Type": "String"
+        },
+        "EnableSystemPrune": {
+            "AllowedValues": [
+                "no",
+                "yes"
+            ],
+            "Default": "no",
+            "Description": "Cleans up unused images, containers, networks and volumes",
+            "Type": "String"
+        },
+        "EnableDynatrace": {
+          "AllowedValues": [
+            "no",
+            "yes"
+          ],
+          "Default": "no",
+          "Description": "Dynatrace Agent Setup on Swarm Nodes",
+          "Type": "String"
+        },
+        "DynatraceVersion": {
+          "Description": "Dynatrace Package to Download",
+          "Default": "Dynatrace-OneAgent-Linux-1.133.115.sh",
+          "Type": "String"
+        },
+        "DynatraceURL": {
+          "Description": "Dynatrace Full Download URL",
+          "AllowedPattern": "^\\S*$",
+          "Type": "String"
+        },
+        "HTTPProxy": {
+            "AllowedPattern": "^\\S*$",
+            "ConstraintDescription": "HTTP_PROXY environment variable setting",
+            "Description": "Value for HTTP_PROXY environment variable.",
+            "Type": "String"
+        },
+        "HTTPSProxy": {
+            "AllowedPattern": "^\\S*$",
+            "ConstraintDescription": "HTTPS_PROXY environment variable setting",
+            "Description": "Value for HTTPS_PROXY environment variable.",
+            "Type": "String"
+        },
+        "NoProxy": {
+            "Description": "Value for NO_PROXY environment variable.",
+            "Default": "127.0.0.1, localhost, 169.254.169.254",
+            "Type": "String"
+        },
+        "InstanceType": {
+            "AllowedValues": [
+                "t2.small",
+                "t2.medium",
+                "t2.large",
+                "t2.xlarge",
+                "t2.2xlarge",
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge",
+                "m4.10xlarge",
+                "m4.16xlarge",
+                "m3.medium",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c4.large",
+                "c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
+                "c3.large",
+                "c3.xlarge",
+                "c3.2xlarge",
+                "c3.4xlarge",
+                "c3.8xlarge",
+                "r3.large",
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
+                "r3.8xlarge",
+                "r4.large",
+                "r4.xlarge",
+                "r4.2xlarge",
+                "r4.4xlarge",
+                "r4.8xlarge",
+                "r4.16xlarge",
+                "i2.xlarge",
+                "i2.2xlarge",
+                "i2.4xlarge",
+                "i2.8xlarge",
+                "i3.large",
+                "i3.xlarge",
+                "i3.2xlarge",
+                "i3.4xlarge",
+                "i3.8xlarge",
+                "i3.16xlarge"
+            ],
+            "ConstraintDescription": "Must be a valid EC2 HVM instance type.",
+            "Default": "m4.large",
+            "Description": "EC2 HVM instance type (t2.small, m3.medium, etc).",
+            "Type": "String"
+        },
+        "KeyName": {
+            "ConstraintDescription": "Must be the name of an existing EC2 KeyPair",
+            "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instances",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "License": {
+            "Description": "Docker Datacenter License in JSON format or URL to download it. Get Trial License here https://store.docker.com/bundles/docker-datacenter",
+            "NoEcho": true,
+            "Type": "String"
+        },
+        "SelinuxURL": {
+            "AllowedPattern": "^\\S*$",
+            "Description": "Selinux URL to download Selinux for Docker EE setup package",
+            "Type": "String"
+        },
+        "DockerEEURL": {
+            "AllowedPattern": "^\\S*$",
+            "Description": "Docker EE URL to download Docker EE setup package",
+            "Type": "String"
+        },
+        "ManagerRootDiskSize": {
+            "Default": "20",
+            "Description": "Size of Manager's Root storage volume in GiB",
+            "MaxValue": "1024",
+            "MinValue": "20",
+            "Type": "Number"
+        },
+        "ManagerRootDiskType": {
+            "AllowedValues": [
+                "standard",
+                "gp2"
+            ],
+            "Default": "gp2",
+            "Description": "Manager Root storage volume type",
+            "Type": "String"
+        },
+        "ManagerDataDiskSize": {
+            "Default": "20",
+            "Description": "Size of Manager's Data storage volume in GiB",
+            "MaxValue": "1024",
+            "MinValue": "20",
+            "Type": "Number"
+        },
+        "ManagerDataDiskType": {
+            "AllowedValues": [
+                "standard",
+                "gp2"
+            ],
+            "Default": "gp2",
+            "Description": "Manager Data storage volume type",
+            "Type": "String"
+        },
+        "WorkerRootDiskSize": {
+            "Default": "20",
+            "Description": "Size of Workers's Root storage volume in GiB",
+            "MaxValue": "1024",
+            "MinValue": "20",
+            "Type": "Number"
+        },
+        "WorkerRootDiskType": {
+            "AllowedValues": [
+                "standard",
+                "gp2"
+            ],
+            "Default": "standard",
+            "Description": "Worker Root storage volume type",
+            "Type": "String"
+        },
+        "WorkerDataDiskSize": {
+            "Default": "20",
+            "Description": "Size of Workers's Data storage volume in GiB",
+            "MaxValue": "1024",
+            "MinValue": "20",
+            "Type": "Number"
+        },
+        "WorkerDataDiskType": {
+            "AllowedValues": [
+                "standard",
+                "gp2"
+            ],
+            "Default": "standard",
+            "Description": "Worker Data storage volume type",
+            "Type": "String"
+        },
+        "ManagerInstanceType": {
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge",
+                "m4.10xlarge",
+                "m4.16xlarge",
+                "m3.medium",
+                "m3.large",
+                "m3.xlarge",
+                "m3.2xlarge",
+                "c4.large",
+                "c4.xlarge",
+                "c4.2xlarge",
+                "c4.4xlarge",
+                "c4.8xlarge",
+                "c3.large",
+                "c3.xlarge",
+                "c3.2xlarge",
+                "c3.4xlarge",
+                "c3.8xlarge",
+                "r3.large",
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
+                "r3.8xlarge",
+                "r4.large",
+                "r4.xlarge",
+                "r4.2xlarge",
+                "r4.4xlarge",
+                "r4.8xlarge",
+                "r4.16xlarge",
+                "i2.xlarge",
+                "i2.2xlarge",
+                "i2.4xlarge",
+                "i2.8xlarge",
+                "i3.large",
+                "i3.xlarge",
+                "i3.2xlarge",
+                "i3.4xlarge",
+                "i3.8xlarge",
+                "i3.16xlarge"
+            ],
+            "ConstraintDescription": "Must be a valid EC2 HVM instance type.",
+            "Default": "m4.large",
+            "Description": "EC2 HVM instance type (m4.large, m3.large, etc).",
+            "Type": "String"
+        },
+        "ManagerSize": {
+            "AllowedValues": [
+                "3",
+                "5"
+            ],
+            "Default": "3",
+            "Description": "Number of Swarm manager nodes (3, 5)",
+            "Type": "Number"
+        },
+        "AssignPublicIpsToInstances": {
+            "Description": "Assign Public or Private IPs to Docker Instances",
+            "Default": "true",
+            "AllowedValues": [
+                "true",
+                "false"
+            ],
+            "Type": "String"
+        },
+        "InternalorPublicELB": {
+            "Description": "Define an Internet-facing or an Internal ELB",
+            "Default": "internet-facing",
+            "AllowedValues": [
+                "internet-facing",
+                "internal"
+            ],
+            "Type": "String"
+        },
+        "SubnetSwarmAz1": {
+            "Description": "Subnet Swarm 1",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetSwarmAz2": {
+            "Description": "Subnet Swarm 2",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetSwarmAz3": {
+            "Description": "Subnet Swarm 3",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetExternalAz1": {
+            "Description": "Subnet External 1",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetExternalAz2": {
+            "Description": "Subnet External 2",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetExternalAz3": {
+            "Description": "Subnet External 3",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetUCPAz1": {
+            "Description": "Subnet UCP 1",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetUCPAz2": {
+            "Description": "Subnet UCP 2",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetUCPAz3": {
+            "Description": "Subnet UCP 3",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetDTRAz1": {
+            "Description": "Subnet DTR 1",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetDTRAz2": {
+            "Description": "Subnet DTR 2",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "SubnetDTRAz3": {
+            "Description": "Subnet DTR 3",
+            "Type": "AWS::EC2::Subnet::Id"
+        },
+        "RemoteSSH": {
+            "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x.",
+            "Description": "The IP address range that can SSH to the EC2 instance.",
+            "MaxLength": "18",
+            "MinLength": "9",
+            "Type": "String"
+        },
+        "Vpc": {
+            "Description": "VPC must have internet access (with Internet Gateway or Virtual Private Gateway)",
+            "Type": "AWS::EC2::VPC::Id"
+        },
+        "VpcCidr": {
+            "ConstraintDescription": "Must be a valid IP CIDR range of the form x.x.x.x/x.",
+            "Description": "The CIDR range for your VPC in form x.x.x.x/x",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "DDCBucket": {
+            "DeletionPolicy": "Retain",
+            "Type": "AWS::S3::Bucket"
+        },
+        "CloudstorEBSPolicy": {
+            "DependsOn": [
+                "ProxyRole",
+                "WorkerRole"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ec2:CreateTags",
+                                "ec2:AttachVolume",
+                                "ec2:DetachVolume",
+                                "ec2:CreateVolume",
+                                "ec2:DeleteVolume",
+                                "ec2:DescribeVolumes",
+                                "ec2:DescribeVolumeStatus",
+                                "ec2:CreateSnapshot",
+                                "ec2:DeleteSnapshot",
+                                "ec2:DescribeSnapshots"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "cloudstor-ebs-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    },
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "DTRLoadBalancer": {
+            "DependsOn": [
+                "DTRLoadBalancerSG"
+            ],
+            "Properties": {
+                "ConnectionSettings": {
+                    "IdleTimeout": 1800
+                },
+                "CrossZone": "true",
+                "HealthCheck": {
+                    "HealthyThreshold": "2",
+                    "Interval": "300",
+                    "Target": "HTTPS:12391/health",
+                    "Timeout": "10",
+                    "UnhealthyThreshold": "10"
+                },
+                "Listeners": [
+                    {
+                        "InstancePort": "12391",
+                        "LoadBalancerPort": "443",
+                        "Protocol": "TCP"
+                    },
+                    {
+                        "InstancePort": "12392",
+                        "LoadBalancerPort": "80",
+                        "Protocol": "TCP"
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "DTRLoadBalancerSG"
+                    }
+                ],
+                "Subnets": {
+                    "Fn::If": [
+                        "HasOnly2AZs",
+                        [
+                            {
+                                "Ref": "SubnetDTRAz1"
+                            },
+                            {
+                                "Ref": "SubnetDTRAz2"
+                            }
+                        ],
+                        [
+                            {
+                                "Ref": "SubnetDTRAz1"
+                            },
+                            {
+                                "Ref": "SubnetDTRAz2"
+                            },
+                            {
+                                "Ref": "SubnetDTRAz3"
+                            }
+                        ]
+                    ]
+                },
+                "Scheme": {
+                    "Ref": "InternalorPublicELB"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "ELB-DTR"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+        },
+        "DTRLoadBalancerSG": {
+            "Properties": {
+                "GroupDescription": "DTR Load Balancer SecurityGroup",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "10.0.0.0/8",
+                        "FromPort": "443",
+                        "IpProtocol": "tcp",
+                        "ToPort": "443"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "DockerLogGroup": {
+            "Condition": "CreateLogResources",
+            "Properties": {
+                "LogGroupName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "lg"
+                        ]
+                    ]
+                },
+                "RetentionInDays": 7
+            },
+            "Type": "AWS::Logs::LogGroup"
+        },
+        "DynDBPolicies": {
+            "DependsOn": [
+                "ProxyRole",
+                "SwarmDynDBTable"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "dynamodb:PutItem",
+                                "dynamodb:DeleteItem",
+                                "dynamodb:GetItem",
+                                "dynamodb:UpdateItem",
+                                "dynamodb:Query"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:dynamodb:",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        ":",
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        ":table/",
+                                        {
+                                            "Ref": "SwarmDynDBTable"
+                                        }
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "dyndb-getput",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "DynDBWorkerPolicies": {
+            "DependsOn": [
+                "WorkerRole",
+                "SwarmDynDBTable"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "dynamodb:GetItem",
+                                "dynamodb:Query"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:dynamodb:",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        ":",
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        ":table/",
+                                        {
+                                            "Ref": "SwarmDynDBTable"
+                                        }
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "worker-dyndb-get",
+                "Roles": [
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "ExternalLoadBalancer": {
+            "DependsOn": [
+                "ExternalLoadBalancerSG"
+            ],
+            "Properties": {
+                "ConnectionSettings": {
+                    "IdleTimeout": 600
+                },
+                "CrossZone": "true",
+                "HealthCheck": {
+                    "HealthyThreshold": "2",
+                    "Interval": "10",
+                    "Target": "HTTP:44554/",
+                    "Timeout": "8",
+                    "UnhealthyThreshold": "4"
+                },
+                "Listeners": [
+                    {
+                        "InstancePort": "7",
+                        "LoadBalancerPort": "7",
+                        "Protocol": "TCP"
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "ExternalLoadBalancerSG"
+                    }
+                ],
+                "Subnets": {
+                    "Fn::If": [
+                        "HasOnly2AZs",
+                        [
+                            {
+                                "Ref": "SubnetExternalAz1"
+                            },
+                            {
+                                "Ref": "SubnetExternalAz2"
+                            }
+                        ],
+                        [
+                            {
+                                "Ref": "SubnetExternalAz1"
+                            },
+                            {
+                                "Ref": "SubnetExternalAz2"
+                            },
+                            {
+                                "Ref": "SubnetExternalAz3"
+                            }
+                        ]
+                    ]
+                },
+                "Scheme": {
+                    "Ref": "InternalorPublicELB"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "ELB"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+        },
+        "ExternalLoadBalancerSG": {
+            "Properties": {
+                "GroupDescription": "External Load Balancer SecurityGroup",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "10.0.0.0/8",
+                        "FromPort": "0",
+                        "IpProtocol": "-1",
+                        "ToPort": "65535"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "FileSystemGP": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "Properties": {
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "EFS-GP"
+                                ]
+                            ]
+                        }
+                    }
+                ],
+                "PerformanceMode": "generalPurpose"
+            },
+            "Type": "AWS::EFS::FileSystem"
+        },
+        "FileSystemMaxIO": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "Properties": {
+                "FileSystemTags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "EFS-MaxIO"
+                                ]
+                            ]
+                        }
+                    }
+                ],
+                "PerformanceMode": "maxIO"
+            },
+            "Type": "AWS::EFS::FileSystem"
+        },
+        "ManagerAsg": {
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": {
+                        "Ref": "ManagerSize"
+                    },
+                    "Timeout": "PT1H"
+                }
+            },
+            "DependsOn": [
+                "SwarmDynDBTable",
+                "ExternalLoadBalancer",
+                "UCPLoadBalancer",
+                "DTRLoadBalancer"
+            ],
+            "Properties": {
+                "DesiredCapacity": {
+                    "Ref": "ManagerSize"
+                },
+                "HealthCheckGracePeriod": 1200,
+                "HealthCheckType": "ELB",
+                "LaunchConfigurationName": {
+                    "Ref": "ManagerLaunchConfig17032ee6aws1"
+                },
+                "LoadBalancerNames": [
+                    {
+                        "Ref": "ExternalLoadBalancer"
+                    },
+                    {
+                        "Ref": "UCPLoadBalancer"
+                    },
+                    {
+                        "Ref": "DTRLoadBalancer"
+                    }
+                ],
+                "MaxSize": 3,
+                "MetricsCollection": [
+                    {
+                        "Granularity": "1Minute"
+                    }
+                ],
+                "MinSize": 0,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "Manager"
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "swarm-node-type",
+                        "PropagateAtLaunch": true,
+                        "Value": "manager"
+                    },
+                    {
+                        "Key": "swarm-stack-id",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    },
+                    {
+                        "Key": "DOCKER_FOR_AWS_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "forAws"
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "DOCKER_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "docker"
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "CLOUDSTOR_FOR_AWS_EBS_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "CloudStorEBSVersion"
+                            ]
+                        }
+                    }
+                ],
+                "VPCZoneIdentifier": [
+                    {
+                        "Fn::If": [
+                            "HasOnly2AZs",
+                            {
+                                "Fn::Join": [
+                                    ",",
+                                    [
+                                        {
+                                            "Ref": "SubnetSwarmAz1"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz2"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "Fn::Join": [
+                                    ",",
+                                    [
+                                        {
+                                            "Ref": "SubnetSwarmAz1"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz2"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz3"
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Type": "AWS::AutoScaling::AutoScalingGroup",
+            "UpdatePolicy": {
+                "AutoScalingRollingUpdate": {
+                    "MaxBatchSize": "1",
+                    "MinInstancesInService": {
+                        "Ref": "ManagerSize"
+                    },
+                    "PauseTime": "PT1H",
+                    "WaitOnResourceSignals": "true"
+                }
+            }
+        },
+        "ManagerLaunchConfig17032ee6aws1": {
+            "DependsOn": "ExternalLoadBalancer",
+            "Properties": {
+                "AssociatePublicIpAddress": {
+                    "Ref": "AssignPublicIpsToInstances"
+                },
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "VolumeSize": {
+                                "Ref": "ManagerRootDiskSize"
+                            },
+                            "VolumeType": {
+                                "Ref": "ManagerRootDiskType"
+                            }
+                        }
+                    },
+                    {
+                        "DeviceName": "/dev/xvdf",
+                        "Ebs": {
+                            "VolumeSize": {
+                                "Ref": "ManagerDataDiskSize"
+                            },
+                            "VolumeType": {
+                                "Ref": "ManagerDataDiskType"
+                            }
+                        }
+                    }
+                ],
+                "IamInstanceProfile": {
+                    "Ref": "ProxyInstanceProfile"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Fn::FindInMap": [
+                                "AWSInstanceType2Arch",
+                                {
+                                    "Ref": "ManagerInstanceType"
+                                },
+                                "Arch"
+                            ]
+                        }
+                    ]
+                },
+                "InstanceType": {
+                    "Ref": "ManagerInstanceType"
+                },
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "ManagerVpcSG"
+                    },
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/sh\n",
+                                "export HTTP_PROXY='",
+                                {
+                                    "Ref": "HTTPProxy"
+                                },
+                                "'\n",
+                                "export HTTPS_PROXY='",
+                                {
+                                    "Ref": "HTTPSProxy"
+                                },
+                                "'\n",
+                                "export NO_PROXY='",
+                                {
+                                    "Ref": "NoProxy"
+                                },
+                                "'\n",
+                                "# Disabling Selinux.\n",
+                                "setenforce 0\n",
+                                "echo \"SELINUX=disabled\" > /etc/sysconfig/selinux\n",
+                                "echo \"SELINUXTYPE=targeted\" >> /etc/sysconfig/selinux\n",
+                                "\n",
+                                "# Set Outbound Proxy settings if set.\n",
+                                "if [ -n \"$HTTP_PROXY\" ]; then\n",
+                                "    echo \"http_proxy=$HTTP_PROXY\" >> /etc/environment && echo \"HTTP_PROXY=$HTTP_PROXY\" >> /etc/environment && echo \"proxy=$HTTP_PROXY\" >> /etc/yum.conf\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$HTTPS_PROXY\" ]; then\n",
+                                "    echo \"https_proxy=$HTTPS_PROXY\" >> /etc/environment && echo \"HTTPS_PROXY=$HTTPS_PROXY\" >> /etc/environment\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$NO_PROXY\" ]; then\n",
+                                "    echo \"no_proxy=$NO_PROXY\" >> /etc/environment && echo \"NO_PROXY=$NO_PROXY\" >> /etc/environment\n",
+                                "fi\n",
+                                "\n",
+                                "# Disabling Kernel Yum Updates and Run Updates.\n",
+                                "echo \"exclude=kernel*\" >> /etc/yum.conf\n",
+                                "echo \"ip_resolve=4\" >> /etc/yum.conf\n",
+                                "# Setup system dependencies.\n",
+                                "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7\n",
+                                "yum install -y yum-utils bind-utils apt-transport-https ca-certificates curl software-properties-common devicemapper-persistent-data lvm2 git wget\n",
+                                "\n",
+                                "export EXTERNAL_LB='",
+                                {
+                                    "Ref": "ExternalLoadBalancer"
+                                },
+                                "'\n",
+                                "export DOCKER_FOR_IAAS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "forAws"
+                                    ]
+                                },
+                                "'\n",
+                                "export CLOUDSTOR_FOR_AWS_EBS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "CloudStorEBSVersion"
+                                    ]
+                                },
+                                "'\n",
+                                "export CLOUDSTOR_FOR_AWS_EFS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "CloudStorEFSVersion"
+                                    ]
+                                },
+                                "'\n",
+                                "export ENABLECLOUDSTOREBS='",
+                                {
+                                    "Ref": "EnableCloudStorEBS"
+                                },
+                                "'\n",
+                                "export ENABLECLOUDSTOREFS='",
+                                {
+                                    "Ref": "EnableCloudStorEFS"
+                                },
+                                "'\n",
+                                "export ENABLEDYNATRACE='",
+                                {
+                                    "Ref": "EnableDynatrace"
+                                },
+                                "'\n",
+                                "export CHANNEL='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "channel"
+                                    ]
+                                },
+                                "'\n",
+                                "export EDITION_ADDON='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "addOn"
+                                    ]
+                                },
+                                "'\n",
+                                "export LOCAL_IP=$(wget -qO- http://169.254.169.254/latest/meta-data/local-ipv4)\n",
+                                "export INSTANCE_TYPE=$(wget -qO- http://169.254.169.254/latest/meta-data/instance-type)\n",
+                                "export NODE_AZ=$(wget -qO- http://169.254.169.254/latest/meta-data/placement/availability-zone/)\n",
+                                "export NODE_REGION=$(echo $NODE_AZ | sed 's/.$//')\n",
+                                "export ENABLE_CLOUDWATCH_LOGS='",
+                                {
+                                    "Ref": "EnableCloudWatchLogs"
+                                },
+                                "'\n",
+                                "export AWS_REGION='",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                "'\n",
+                                "export MANAGER_SECURITY_GROUP_ID='",
+                                {
+                                    "Ref": "ManagerVpcSG"
+                                },
+                                "'\n",
+                                "export WORKER_SECURITY_GROUP_ID='",
+                                {
+                                    "Ref": "NodeVpcSG"
+                                },
+                                "'\n",
+                                "export DYNAMODB_TABLE='",
+                                {
+                                    "Ref": "SwarmDynDBTable"
+                                },
+                                "'\n",
+                                "export STACK_NAME='",
+                                {
+                                    "Ref": "AWS::StackName"
+                                },
+                                "'\n",
+                                "export STACK_ID='",
+                                {
+                                    "Ref": "AWS::StackId"
+                                },
+                                "'\n",
+                                "export ACCOUNT_ID='",
+                                {
+                                    "Ref": "AWS::AccountId"
+                                },
+                                "'\n",
+                                "export VPC_ID='",
+                                {
+                                    "Ref": "Vpc"
+                                },
+                                "'\n",
+                                "export SWARM_QUEUE='",
+                                {
+                                    "Ref": "SwarmSQS"
+                                },
+                                "'\n",
+                                "export CLEANUP_QUEUE='",
+                                {
+                                    "Ref": "SwarmSQSCleanup"
+                                },
+                                "'\n",
+                                "export RUN_VACUUM='",
+                                {
+                                    "Ref": "EnableSystemPrune"
+                                },
+                                "'\n",
+                                "export LOG_GROUP_NAME='",
+                                {
+                                    "Fn::Join": [
+                                        "-",
+                                        [
+                                            {
+                                                "Ref": "AWS::StackName"
+                                            },
+                                            "lg"
+                                        ]
+                                    ]
+                                },
+                                "'\n",
+                                "export HAS_DDC='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "HasDDC"
+                                    ]
+                                },
+                                "'\n",
+                                "export ENABLE_EFS='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        "1",
+                                        "0"
+                                    ]
+                                },
+                                "'\n",
+                                "export EFS_ID_REGULAR='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        {
+                                            "Ref": "FileSystemGP"
+                                        },
+                                        ""
+                                    ]
+                                },
+                                "'\n",
+                                "export EFS_ID_MAXIO='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        {
+                                            "Ref": "FileSystemMaxIO"
+                                        },
+                                        ""
+                                    ]
+                                },
+                                "'\n",
+                                "export DOCKER_EXPERIMENTAL='false' \n",
+                                "export NODE_TYPE='manager'\n",
+                                "export INSTANCE_NAME='ManagerAsg'\n",
+                                "export UCP_ADMIN_USER='",
+                                {
+                                    "Ref": "DDCUsernameSet"
+                                },
+                                "'\n",
+                                "export UCP_ADMIN_PASSWORD='",
+                                {
+                                    "Ref": "DDCPasswordSet"
+                                },
+                                "'\n",
+                                "export S3_BUCKET_NAME='",
+                                {
+                                    "Ref": "DDCBucket"
+                                },
+                                "'\n",
+                                "export LICENSE='",
+                                {
+                                    "Ref": "License"
+                                },
+                                "'\n",
+                                "export SELINUXURL='",
+                                {
+                                    "Ref": "SelinuxURL"
+                                },
+                                "'\n",
+                                "export DOCKERURL='",
+                                {
+                                    "Ref": "DockerEEURL"
+                                },
+                                "'\n",
+                                "export DYNATRACEVERSION='",
+                                {
+                                    "Ref": "DynatraceVersion"
+                                },
+                                "'\n",
+                                "export DYNATRACEURL='",
+                                {
+                                    "Ref": "DynatraceURL"
+                                },
+                                "'\n",
+                                "export UCP_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "UCPLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "DTRLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export APP_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "ExternalLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export MANAGER_COUNT='",
+                                {
+                                    "Ref": "ManagerSize"
+                                },
+                                "'\n",
+                                "export UCP_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "UCPTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "DTRTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export UCP_INIT_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "UCPINITTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_INIT_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "DTRINITTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "# Create Docker Config Path.\n",
+                                "mkdir /etc/docker\n",
+                                "\n",
+                                "# Download and Setup SELINUX for Docker EE.\n",
+                                "wget -c \"$SELINUXURL\" -O selinux.rpm\n",
+                                "yum install -y selinux.rpm\n",
+                                "\n",
+                                "# Download and Setup Docker EE.\n",
+                                "wget -c \"$DOCKERURL\" -O dockeree.rpm\n",
+                                "yum install -y dockeree.rpm\n",
+                                "systemctl enable docker && systemctl stop docker\n",
+                                "\n",
+                                "# Setup Docker HTTP_PROXY.\n",
+                                "if [ -n \"$HTTP_PROXY\" ]; then\n",
+                                "    echo \"http_proxy=$HTTP_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$HTTPS_PROXY\" ]; then\n",
+                                "    echo \"https_proxy=$HTTPS_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$NO_PROXY\" ]; then\n",
+                                "    echo \"no_proxy=$NO_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "# Configure LVM.\n",
+                                "pvcreate /dev/xvdf\n",
+                                "vgcreate docker /dev/xvdf\n",
+                                "lvcreate --wipesignatures y -n thinpool docker -l 95%VG\n",
+                                "lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG\n",
+                                "lvconvert -y --zero n -c 512k --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta\n",
+                                "echo 'activation { thin_pool_autoextend_threshold=80 thin_pool_autoextend_percent=20 }'\n",
+                                "lvs -o+seg_monitor\n",
+                                "mkdir /var/lib/docker.bk\n",
+                                "mv /var/lib/docker/* /var/lib/docker.bk\n",
+                                "\n",
+                                "# Configure Docker Storage Driver.\n",
+                                "echo '{\"storage-driver\": \"devicemapper\", \"storage-opts\": [ \"dm.thinpooldev=/dev/mapper/docker-thinpool\", \"dm.use_deferred_removal=true\", \"dm.use_deferred_deletion=true\"]}' >> /etc/docker/daemon.json\n",
+                                "\n",
+                                "# Setup Docker Diagnostic Server.\n",
+                                "cd ~/ && git clone https://y.daniel:xYQPXsrssRd_nLMRysmD@git.lbn.fr/y.daniel/DOCKER_DIAG_SERVER.git\n",
+                                "cp ~/DOCKER_DIAG_SERVER/usr/bin/diagnostics-server /usr/bin/diagnostics-server\n",
+                                "cp ~/DOCKER_DIAG_SERVER/usr/lib/systemd/system/diagnostics-server.service /usr/lib/systemd/system/diagnostics-server.service\n",
+                                "systemctl daemon-reload && systemctl start diagnostics-server && cd ~/\n",
+                                "\n",
+                                "# Docker EE Configuration \n",
+                                "mkdir -p /var/lib/docker/editions\n",
+                                "echo \"$EXTERNAL_LB\" > /var/lib/docker/editions/lb_name\n",
+                                "echo \"# hostname : ELB_name\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"127.0.0.1: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"localhost: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"default: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "\n",
+                                "echo '{\"experimental\": '$DOCKER_EXPERIMENTAL', \"labels\":[\"os=linux\", \"region='$NODE_REGION'\", \"availability_zone='$NODE_AZ'\", \"instance_type='$INSTANCE_TYPE'\", \"node_type='$NODE_TYPE'\" ]}' >> /etc/docker/daemon.json\n",
+                                "\n",
+                                "# Dynatrace Setup\n",
+                                "if [ $ENABLEDYNATRACE == 'yes' ] ; then\n",
+                                "   wget -O $DYNATRACEVERSION \"$DYNATRACEURL\"\n",
+                                "   wget \"https://ca.dynatrace.com/dt-root.cert.pem\" ; ( echo '\"Content-Type\": \"multipart/signed\"; \"protocol=application/x-pkcs7-signature\"; \"micalg=sha-256\"; \"boundary=--SIGNED-INSTALLER\"'; echo ; echo ; echo '\"----SIGNED-INSTALLER\"' ; cat $DYNATRACEVERSION ) | openssl cms -verify -CAfile dt-root.cert.pem > /dev/null\n",
+                                "   /bin/sh $DYNATRACEVERSION APP_LOG_CONTENT_ACCESS=1\n",
+                                "fi\n",
+                                "\n",
+                                "if [ $ENABLE_CLOUDWATCH_LOGS == 'yes' ] ; then\n",
+                                "   echo ', \"log-driver\": \"awslogs\", \"log-opts\": {\"awslogs-group\": \"'$LOG_GROUP_NAME'\", \"tag\": \"{{.Name}}-{{.ID}}\" }}' >> /etc/docker/daemon.json\n",
+                                "else\n",
+                                "   echo ' }' >> /etc/docker/daemon.json\n",
+                                "fi\n",
+                                "\n",
+                                "systemctl start docker\n",
+                                "sleep 5\n",
+                                "\n",
+                                "# init-aws\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --restart=no -d -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME -e STACK_ID=\"$STACK_ID\" -e ACCOUNT_ID=$ACCOUNT_ID -e INSTANCE_NAME=$INSTANCE_NAME -e DOCKER_FOR_IAAS_VERSION=$DOCKER_FOR_IAAS_VERSION -e EDITION_ADDON=$EDITION_ADDON -e HAS_DDC=$HAS_DDC -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -v /var/log:/var/log eggmuffin/init-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "\n",
+                                "# guide-aws\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --name=guide-aws --restart=always -d -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME -e INSTANCE_NAME=$INSTANCE_NAME -e VPC_ID=$VPC_ID -e STACK_ID=\"$STACK_ID\" -e ACCOUNT_ID=$ACCOUNT_ID -e SWARM_QUEUE=\"$SWARM_QUEUE\" -e CLEANUP_QUEUE=\"$CLEANUP_QUEUE\" -e RUN_VACUUM=$RUN_VACUUM -e DOCKER_FOR_IAAS_VERSION=$DOCKER_FOR_IAAS_VERSION -e EDITION_ADDON=$EDITION_ADDON -e HAS_DDC=$HAS_DDC -e CHANNEL=$CHANNEL -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker eggmuffin/guide-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --name=meta-aws --restart=always -d -p $LOCAL_IP:9024:5000 -e AWS_REGION=$AWS_REGION -e MANAGER_SECURITY_GROUP_ID=$MANAGER_SECURITY_GROUP_ID -e WORKER_SECURITY_GROUP_ID=$WORKER_SECURITY_GROUP_ID -v /var/run/docker.sock:/var/run/docker.sock eggmuffin/meta-aws:$DOCKER_FOR_IAAS_VERSION metaserver -iaas_provider=aws\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --name=l4controller-aws --restart=always -d -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker/editions:/var/lib/docker/editions docker4x/l4controller-aws:$DOCKER_FOR_IAAS_VERSION run --log=4 --all=true\n",
+                                "\n",
+                                "# CloudStor EBS\n",
+                                "if [ $ENABLECLOUDSTOREBS == 'yes' ] ; then\n",
+                                "   docker plugin install --alias cloudstor:aws --grant-all-permissions docker4x/cloudstor:$CLOUDSTOR_FOR_AWS_EBS_VERSION CLOUD_PLATFORM=AWS EFS_ID_REGULAR=$EFS_ID_REGULAR EFS_ID_MAXIO=$EFS_ID_MAXIO AWS_REGION=$AWS_REGION AWS_STACK_ID=$STACK_ID EFS_SUPPORTED=$ENABLE_EFS DEBUG=1\n",
+                                "fi\n",
+                                "\n",
+                                "# CloudStor EFS\n",
+                                "if [ $ENABLECLOUDSTOREFS == 'yes' ] ; then\n",
+                                "   docker plugin install --alias cloudstor:aws --grant-all-permissions docker4x/cloudstor:$CLOUDSTOR_FOR_AWS_EFS_VERSION CLOUD_PLATFORM=AWS EFS_ID_REGULAR=$EFS_ID_REGULAR EFS_ID_MAXIO=$EFS_ID_MAXIO AWS_REGION=$AWS_REGION AWS_STACK_ID=$STACK_ID EFS_SUPPORTED=$ENABLE_EFS DEBUG=1\n",
+                                "fi\n",
+                                "\n",
+                                "# ddc-init-aws\n",
+                                "docker pull eggmuffin/ddc-init-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "docker run --log-driver=json-file --name=ddc-init-aws --restart=on-failure:5 -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME  -e INSTANCE_NAME=$INSTANCE_NAME -e INSTALL_DDC='yes' -e NODE_NAME=$HOSTNAME -e UCP_ADMIN_USER=$UCP_ADMIN_USER -e UCP_ADMIN_PASSWORD=$UCP_ADMIN_PASSWORD -e S3_BUCKET_NAME=$S3_BUCKET_NAME -e LICENSE=\"$LICENSE\" -e UCP_ELB_HOSTNAME=$UCP_ELB_HOSTNAME -e DTR_ELB_HOSTNAME=$DTR_ELB_HOSTNAME -e APP_ELB_HOSTNAME=$APP_ELB_HOSTNAME -e MANAGER_COUNT=$MANAGER_COUNT -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/docker:/tmp/docker -e UCP_TAG=$UCP_TAG -e DTR_TAG=$DTR_TAG eggmuffin/ddc-init-aws:$DOCKER_FOR_IAAS_VERSION\n"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::AutoScaling::LaunchConfiguration"
+        },
+        "ManagerVpcSG": {
+            "DependsOn": "NodeVpcSG",
+            "Properties": {
+                "GroupDescription": "Manager SecurityGroup",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": {
+                            "Ref": "RemoteSSH"
+                        },
+                        "FromPort": "22",
+                        "IpProtocol": "tcp",
+                        "ToPort": "22"
+                    },
+                    {
+                        "IpProtocol": "50",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "NodeVpcSG",
+                                "GroupId"
+                            ]
+                        }
+                    },
+                    {
+                        "FromPort": "2377",
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "NodeVpcSG",
+                                "GroupId"
+                            ]
+                        },
+                        "ToPort": "2377"
+                    },
+                    {
+                        "FromPort": "4789",
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "NodeVpcSG",
+                                "GroupId"
+                            ]
+                        },
+                        "ToPort": "4789"
+                    },
+                    {
+                        "FromPort": "7946",
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "NodeVpcSG",
+                                "GroupId"
+                            ]
+                        },
+                        "ToPort": "7946"
+                    },
+                    {
+                        "FromPort": "7946",
+                        "IpProtocol": "udp",
+                        "SourceSecurityGroupId": {
+                            "Fn::GetAtt": [
+                                "NodeVpcSG",
+                                "GroupId"
+                            ]
+                        },
+                        "ToPort": "7946"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "MountTargetGP1": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemGP",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemGP"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz1"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "MountTargetGP2": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemGP",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemGP"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz2"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "MountTargetGP3": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemGP",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemGP"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz3"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "MountTargetMaxIO1": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemMaxIO",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemMaxIO"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz1"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "MountTargetMaxIO2": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemMaxIO",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemMaxIO"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz2"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "MountTargetMaxIO3": {
+            "Condition": "InstallCloudStorEFSPreReqs",
+            "DependsOn": [
+                "FileSystemMaxIO",
+                "SwarmWideSG"
+            ],
+            "Properties": {
+                "FileSystemId": {
+                    "Ref": "FileSystemMaxIO"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SwarmWideSG"
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "SubnetSwarmAz3"
+                }
+            },
+            "Type": "AWS::EFS::MountTarget"
+        },
+        "NodeAsg": {
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": {
+                        "Ref": "ClusterSize"
+                    },
+                    "Timeout": "PT1H"
+                }
+            },
+            "DependsOn": "ManagerAsg",
+            "Properties": {
+                "DesiredCapacity": {
+                    "Ref": "ClusterSize"
+                },
+                "HealthCheckGracePeriod": 300,
+                "HealthCheckType": "ELB",
+                "LaunchConfigurationName": {
+                    "Ref": "NodeLaunchConfig17032ee6aws1"
+                },
+                "LoadBalancerNames": [
+                    {
+                        "Ref": "ExternalLoadBalancer"
+                    }
+                ],
+                "MaxSize": 3,
+                "MetricsCollection": [
+                    {
+                        "Granularity": "1Minute"
+                    }
+                ],
+                "MinSize": 0,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "Worker"
+                                ]
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "swarm-node-type",
+                        "PropagateAtLaunch": true,
+                        "Value": "Worker"
+                    },
+                    {
+                        "Key": "swarm-stack-id",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    },
+                    {
+                        "Key": "DOCKER_FOR_AWS_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "forAws"
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "DOCKER_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "docker"
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "CLOUDSTOR_FOR_AWS_EBS_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "CloudStorEBSVersion"
+                            ]
+                        }
+                    },
+                    {
+                        "Key": "CLOUDSTOR_FOR_AWS_EFS_VERSION",
+                        "PropagateAtLaunch": true,
+                        "Value": {
+                            "Fn::FindInMap": [
+                                "DockerForAWS",
+                                "version",
+                                "CloudStorEFSVersion"
+                            ]
+                        }
+                    }
+                ],
+                "VPCZoneIdentifier": [
+                    {
+                        "Fn::If": [
+                            "HasOnly2AZs",
+                            {
+                                "Fn::Join": [
+                                    ",",
+                                    [
+                                        {
+                                            "Ref": "SubnetSwarmAz1"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz2"
+                                        }
+                                    ]
+                                ]
+                            },
+                            {
+                                "Fn::Join": [
+                                    ",",
+                                    [
+                                        {
+                                            "Ref": "SubnetSwarmAz1"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz2"
+                                        },
+                                        {
+                                            "Ref": "SubnetSwarmAz3"
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            "Type": "AWS::AutoScaling::AutoScalingGroup",
+            "UpdatePolicy": {
+                "AutoScalingRollingUpdate": {
+                    "MaxBatchSize": "1",
+                    "MinInstancesInService": {
+                        "Ref": "ClusterSize"
+                    },
+                    "PauseTime": "PT1H",
+                    "WaitOnResourceSignals": "true"
+                }
+            }
+        },
+        "NodeLaunchConfig17032ee6aws1": {
+            "DependsOn": "ManagerAsg",
+            "Properties": {
+                "AssociatePublicIpAddress": {
+                    "Ref": "AssignPublicIpsToInstances"
+                },
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "VolumeSize": {
+                                "Ref": "WorkerRootDiskSize"
+                            },
+                            "VolumeType": {
+                                "Ref": "WorkerRootDiskType"
+                            }
+                        }
+                    },
+                    {
+                        "DeviceName": "/dev/xvdf",
+                        "Ebs": {
+                            "VolumeSize": {
+                                "Ref": "WorkerDataDiskSize"
+                            },
+                            "VolumeType": {
+                                "Ref": "WorkerDataDiskType"
+                            }
+                        }
+                    }
+                ],
+                "IamInstanceProfile": {
+                    "Ref": "WorkerInstanceProfile"
+                },
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Fn::FindInMap": [
+                                "AWSInstanceType2Arch",
+                                {
+                                    "Ref": "InstanceType"
+                                },
+                                "Arch"
+                            ]
+                        }
+                    ]
+                },
+                "InstanceType": {
+                    "Ref": "InstanceType"
+                },
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "NodeVpcSG"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/sh\n",
+                                "export HTTP_PROXY='",
+                                {
+                                    "Ref": "HTTPProxy"
+                                },
+                                "'\n",
+                                "export HTTPS_PROXY='",
+                                {
+                                    "Ref": "HTTPSProxy"
+                                },
+                                "'\n",
+                                "export NO_PROXY='",
+                                {
+                                    "Ref": "NoProxy"
+                                },
+                                "'\n",
+                                "# Disabling Selinux.\n",
+                                "setenforce 0\n",
+                                "echo \"SELINUX=disabled\" > /etc/sysconfig/selinux\n",
+                                "echo \"SELINUXTYPE=targeted\" >> /etc/sysconfig/selinux\n",
+                                "\n",
+                                "# Set Outbound Proxy settings if set.\n",
+                                "if [ -n \"$HTTP_PROXY\" ]; then\n",
+                                "    echo \"http_proxy=$HTTP_PROXY\" >> /etc/environment && echo \"HTTP_PROXY=$HTTP_PROXY\" >> /etc/environment && echo \"proxy=$HTTP_PROXY\" >> /etc/yum.conf\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$HTTPS_PROXY\" ]; then\n",
+                                "    echo \"https_proxy=$HTTPS_PROXY\" >> /etc/environment && echo \"HTTPS_PROXY=$HTTPS_PROXY\" >> /etc/environment\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$NO_PROXY\" ]; then\n",
+                                "    echo \"no_proxy=$NO_PROXY\" >> /etc/environment && echo \"NO_PROXY=$NO_PROXY\" >> /etc/environment\n",
+                                "fi\n",
+                                "\n",
+                                "# Disabling Kernel Yum Updates and Run Updates.\n",
+                                "echo \"exclude=kernel*\" >> /etc/yum.conf\n",
+                                "echo \"ip_resolve=4\" >> /etc/yum.conf\n",
+                                "\n",
+                                "# Setup system dependencies.\n",
+                                "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7\n",
+                                "yum install -y yum-utils bind-utils apt-transport-https ca-certificates curl software-properties-common devicemapper-persistent-data lvm2 git wget\n",
+                                "\n",
+                                "export EXTERNAL_LB='",
+                                {
+                                    "Ref": "ExternalLoadBalancer"
+                                },
+                                "'\n",
+                                "export DOCKER_FOR_IAAS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "forAws"
+                                    ]
+                                },
+                                "'\n",
+                                "export CLOUDSTOR_FOR_AWS_EBS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "CloudStorEBSVersion"
+                                    ]
+                                },
+                                "'\n",
+                                "export CLOUDSTOR_FOR_AWS_EFS_VERSION='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "CloudStorEFSVersion"
+                                    ]
+                                },
+                                "'\n",
+                                "export ENABLECLOUDSTOREBS='",
+                                {
+                                    "Ref": "EnableCloudStorEBS"
+                                },
+                                "'\n",
+                                "export ENABLECLOUDSTOREFS='",
+                                {
+                                    "Ref": "EnableCloudStorEFS"
+                                },
+                                "'\n",
+                                "export ENABLEDYNATRACE='",
+                                {
+                                    "Ref": "EnableDynatrace"
+                                },
+                                "'\n",
+                                "export CHANNEL='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "channel"
+                                    ]
+                                },
+                                "'\n",
+                                "export EDITION_ADDON='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "addOn"
+                                    ]
+                                },
+                                "'\n",
+                                "export LOCAL_IP=$(wget -qO- http://169.254.169.254/latest/meta-data/local-ipv4)\n",
+                                "export INSTANCE_TYPE=$(wget -qO- http://169.254.169.254/latest/meta-data/instance-type)\n",
+                                "export NODE_AZ=$(wget -qO- http://169.254.169.254/latest/meta-data/placement/availability-zone/)\n",
+                                "export NODE_REGION=$(echo $NODE_AZ | sed 's/.$//')\n",
+                                "export ENABLE_CLOUDWATCH_LOGS='",
+                                {
+                                    "Ref": "EnableCloudWatchLogs"
+                                },
+                                "'\n",
+                                "export AWS_REGION='",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                "'\n",
+                                "export MANAGER_SECURITY_GROUP_ID='",
+                                {
+                                    "Ref": "ManagerVpcSG"
+                                },
+                                "'\n",
+                                "export WORKER_SECURITY_GROUP_ID='",
+                                {
+                                    "Ref": "NodeVpcSG"
+                                },
+                                "'\n",
+                                "export DYNAMODB_TABLE='",
+                                {
+                                    "Ref": "SwarmDynDBTable"
+                                },
+                                "'\n",
+                                "export STACK_NAME='",
+                                {
+                                    "Ref": "AWS::StackName"
+                                },
+                                "'\n",
+                                "export STACK_ID='",
+                                {
+                                    "Ref": "AWS::StackId"
+                                },
+                                "'\n",
+                                "export ACCOUNT_ID='",
+                                {
+                                    "Ref": "AWS::AccountId"
+                                },
+                                "'\n",
+                                "export VPC_ID='",
+                                {
+                                    "Ref": "Vpc"
+                                },
+                                "'\n",
+                                "export SWARM_QUEUE='",
+                                {
+                                    "Ref": "SwarmSQS"
+                                },
+                                "'\n",
+                                "export CLEANUP_QUEUE='",
+                                {
+                                    "Ref": "SwarmSQSCleanup"
+                                },
+                                "'\n",
+                                "export RUN_VACUUM='",
+                                {
+                                    "Ref": "EnableSystemPrune"
+                                },
+                                "'\n",
+                                "export LOG_GROUP_NAME='",
+                                {
+                                    "Fn::Join": [
+                                        "-",
+                                        [
+                                            {
+                                                "Ref": "AWS::StackName"
+                                            },
+                                            "lg"
+                                        ]
+                                    ]
+                                },
+                                "'\n",
+                                "export HAS_DDC='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "HasDDC"
+                                    ]
+                                },
+                                "'\n",
+                                "export ENABLE_EFS='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        "1",
+                                        "0"
+                                    ]
+                                },
+                                "'\n",
+                                "export EFS_ID_REGULAR='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        {
+                                            "Ref": "FileSystemGP"
+                                        },
+                                        ""
+                                    ]
+                                },
+                                "'\n",
+                                "export EFS_ID_MAXIO='",
+                                {
+                                    "Fn::If": [
+                                        "InstallCloudStorEFSPreReqs",
+                                        {
+                                            "Ref": "FileSystemMaxIO"
+                                        },
+                                        ""
+                                    ]
+                                },
+                                "'\n",
+                                "export DOCKER_EXPERIMENTAL='false'\n",
+                                "export NODE_TYPE='Worker'\n",
+                                "export INSTANCE_NAME='NodeAsg'\n",
+                                "export UCP_ADMIN_USER='",
+                                {
+                                    "Ref": "DDCUsernameSet"
+                                },
+                                "'\n",
+                                "export UCP_ADMIN_PASSWORD='",
+                                {
+                                    "Ref": "DDCPasswordSet"
+                                },
+                                "'\n",
+                                "export S3_BUCKET_NAME='",
+                                {
+                                    "Ref": "DDCBucket"
+                                },
+                                "'\n",
+                                "export LICENSE='",
+                                {
+                                    "Ref": "License"
+                                },
+                                "'\n",
+                                "export SELINUXURL='",
+                                {
+                                    "Ref": "SelinuxURL"
+                                },
+                                "'\n",
+                                "export DOCKERURL='",
+                                {
+                                    "Ref": "DockerEEURL"
+                                },
+                                "'\n",
+                                "export DYNATRACEVERSION='",
+                                {
+                                    "Ref": "DynatraceVersion"
+                                },
+                                "'\n",
+                                "export DYNATRACEURL='",
+                                {
+                                    "Ref": "DynatraceURL"
+                                },
+                                "'\n",
+                                "export UCP_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "UCPLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "DTRLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export APP_ELB_HOSTNAME='",
+                                {
+                                    "Fn::GetAtt": [
+                                        "ExternalLoadBalancer",
+                                        "DNSName"
+                                    ]
+                                },
+                                "'\n",
+                                "export MANAGER_COUNT='",
+                                {
+                                    "Ref": "ManagerSize"
+                                },
+                                "'\n",
+                                "export UCP_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "UCPTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "DTRTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export UCP_INIT_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "UCPINITTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "export DTR_INIT_TAG='",
+                                {
+                                    "Fn::FindInMap": [
+                                        "DockerForAWS",
+                                        "version",
+                                        "DTRINITTAG"
+                                    ]
+                                },
+                                "'\n",
+                                "# Create Docker Config Path.\n",
+                                "mkdir /etc/docker\n",
+                                "\n",
+                                "# Download and Setup SELINUX for Docker EE.\n",
+                                "wget -c \"$SELINUXURL\" -O selinux.rpm\n",
+                                "yum install -y selinux.rpm\n",
+                                "\n",
+                                "# Download and Setup Docker EE.\n",
+                                "wget -c \"$DOCKERURL\" -O dockeree.rpm\n",
+                                "yum install -y dockeree.rpm\n",
+                                "systemctl enable docker && systemctl stop docker\n",
+                                "\n",
+                                "# Setup Docker HTTP_PROXY.\n",
+                                "if [ -n \"$HTTP_PROXY\" ]; then\n",
+                                "    echo \"http_proxy=$HTTP_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$HTTPS_PROXY\" ]; then\n",
+                                "    echo \"https_proxy=$HTTPS_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "if [ -n \"$NO_PROXY\" ]; then\n",
+                                "    echo \"no_proxy=$NO_PROXY\" >> /etc/sysconfig/docker && sed -i '/\\[Service\\]/a EnvironmentFile=/etc/sysconfig/docker' /usr/lib/systemd/system/docker.service && systemctl daemon-reload\n",
+                                "fi\n",
+                                "\n",
+                                "# Configure LVM.\n",
+                                "pvcreate /dev/xvdf\n",
+                                "vgcreate docker /dev/xvdf\n",
+                                "lvcreate --wipesignatures y -n thinpool docker -l 95%VG\n",
+                                "lvcreate --wipesignatures y -n thinpoolmeta docker -l 1%VG\n",
+                                "lvconvert -y --zero n -c 512k --thinpool docker/thinpool --poolmetadata docker/thinpoolmeta\n",
+                                "echo 'activation { thin_pool_autoextend_threshold=80 thin_pool_autoextend_percent=20 }'\n",
+                                "lvs -o+seg_monitor\n",
+                                "mkdir /var/lib/docker.bk\n",
+                                "mv /var/lib/docker/* /var/lib/docker.bk\n",
+                                "\n",
+                                "# Configure Docker Storage Driver.\n",
+                                "echo '{\"storage-driver\": \"devicemapper\", \"storage-opts\": [ \"dm.thinpooldev=/dev/mapper/docker-thinpool\", \"dm.use_deferred_removal=true\", \"dm.use_deferred_deletion=true\"]}' >> /etc/docker/daemon.json\n",
+                                "\n",
+                                "# Setup Docker Diagnostic Server.\n",
+                                "cd ~/ && git clone https://y.daniel:xYQPXsrssRd_nLMRysmD@git.lbn.fr/y.daniel/DOCKER_DIAG_SERVER.git\n",
+                                "cp ~/DOCKER_DIAG_SERVER/usr/bin/diagnostics-server /usr/bin/diagnostics-server\n",
+                                "cp ~/DOCKER_DIAG_SERVER/usr/lib/systemd/system/diagnostics-server.service /usr/lib/systemd/system/diagnostics-server.service\n",
+                                "systemctl daemon-reload && systemctl start diagnostics-server && cd ~/\n",
+                                "\n",
+                                "# Docker EE Configuration \n",
+                                "mkdir -p /var/lib/docker/editions\n",
+                                "echo \"$EXTERNAL_LB\" > /var/lib/docker/editions/lb_name\n",
+                                "echo \"# hostname : ELB_name\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"127.0.0.1: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"localhost: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "echo \"default: $EXTERNAL_LB\" >> /var/lib/docker/editions/elb.config\n",
+                                "\n",
+                                "echo '{\"experimental\": '$DOCKER_EXPERIMENTAL', \"labels\":[\"os=linux\", \"region='$NODE_REGION'\", \"availability_zone='$NODE_AZ'\", \"instance_type='$INSTANCE_TYPE'\", \"node_type='$NODE_TYPE'\" ]}' >> /etc/docker/daemon.json\n",
+                                "\n",
+                                "# Dynatrace Setup\n",
+                                "if [ $ENABLEDYNATRACE == 'yes' ] ; then\n",
+                                "   wget -O $DYNATRACEVERSION \"$DYNATRACEURL\"\n",
+                                "   wget \"https://ca.dynatrace.com/dt-root.cert.pem\" ; ( echo '\"Content-Type\": \"multipart/signed\"; \"protocol=application/x-pkcs7-signature\"; \"micalg=sha-256\"; \"boundary=--SIGNED-INSTALLER\"'; echo ; echo ; echo '\"----SIGNED-INSTALLER\"' ; cat $DYNATRACEVERSION ) | openssl cms -verify -CAfile dt-root.cert.pem > /dev/null\n",
+                                "   /bin/sh $DYNATRACEVERSION APP_LOG_CONTENT_ACCESS=1\n",
+                                "fi\n",
+                                "\n",
+                                "if [ $ENABLE_CLOUDWATCH_LOGS == 'yes' ] ; then\n",
+                                "   echo ', \"log-driver\": \"awslogs\", \"log-opts\": {\"awslogs-group\": \"'$LOG_GROUP_NAME'\", \"tag\": \"{{.Name}}-{{.ID}}\" }}' >> /etc/docker/daemon.json\n",
+                                "else\n",
+                                "   echo ' }' >> /etc/docker/daemon.json\n",
+                                "fi\n",
+                                "\n",
+                                "systemctl start docker\n",
+                                "sleep 5\n",
+                                "\n",
+                                "# init-aws\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --restart=no -d -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME -e STACK_ID=\"$STACK_ID\" -e ACCOUNT_ID=$ACCOUNT_ID -e INSTANCE_NAME=$INSTANCE_NAME -e DOCKER_FOR_IAAS_VERSION=$DOCKER_FOR_IAAS_VERSION -e EDITION_ADDON=$EDITION_ADDON -e HAS_DDC=$HAS_DDC -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -v /var/log:/var/log eggmuffin/init-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "\n",
+                                "# guide-aws\n",
+                                "docker run --label com.docker.editions.system --log-driver=json-file --name=guide-aws --restart=always -d -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME -e INSTANCE_NAME=$INSTANCE_NAME -e VPC_ID=$VPC_ID -e STACK_ID=\"$STACK_ID\" -e ACCOUNT_ID=$ACCOUNT_ID -e SWARM_QUEUE=\"$SWARM_QUEUE\" -e CLEANUP_QUEUE=\"$CLEANUP_QUEUE\" -e RUN_VACUUM=$RUN_VACUUM -e DOCKER_FOR_IAAS_VERSION=$DOCKER_FOR_IAAS_VERSION -e EDITION_ADDON=$EDITION_ADDON -e HAS_DDC=$HAS_DDC -e CHANNEL=$CHANNEL -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker eggmuffin/guide-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "\n",
+                                "# CloudStor EBS\n",
+                                "if [ $ENABLECLOUDSTOREBS == 'yes' ] ; then\n",
+                                "   docker plugin install --alias cloudstor:aws --grant-all-permissions docker4x/cloudstor:$CLOUDSTOR_FOR_AWS_EBS_VERSION CLOUD_PLATFORM=AWS EFS_ID_REGULAR=$EFS_ID_REGULAR EFS_ID_MAXIO=$EFS_ID_MAXIO AWS_REGION=$AWS_REGION AWS_STACK_ID=$STACK_ID EFS_SUPPORTED=$ENABLE_EFS DEBUG=1\n",
+                                "fi\n",
+                                "\n",
+                                "# CloudStor EFS\n",
+                                "if [ $ENABLECLOUDSTOREFS == 'yes' ] ; then\n",
+                                "   docker plugin install --alias cloudstor:aws --grant-all-permissions docker4x/cloudstor:$CLOUDSTOR_FOR_AWS_EFS_VERSION CLOUD_PLATFORM=AWS EFS_ID_REGULAR=$EFS_ID_REGULAR EFS_ID_MAXIO=$EFS_ID_MAXIO AWS_REGION=$AWS_REGION AWS_STACK_ID=$STACK_ID EFS_SUPPORTED=$ENABLE_EFS DEBUG=1\n",
+                                "fi\n",
+                                "\n",
+                                "# Worker user data\n",
+                                "# ddc-init-aws\n",
+                                "docker pull eggmuffin/ddc-init-aws:$DOCKER_FOR_IAAS_VERSION\n",
+                                "docker run --log-driver=json-file --name=ddc-init-aws --restart=on-failure:5 -e DYNAMODB_TABLE=$DYNAMODB_TABLE -e NODE_TYPE=$NODE_TYPE -e REGION=$AWS_REGION -e STACK_NAME=$STACK_NAME  -e INSTANCE_NAME=$INSTANCE_NAME -e INSTALL_DDC='yes' -e NODE_NAME=$HOSTNAME -e UCP_ADMIN_USER=$UCP_ADMIN_USER -e UCP_ADMIN_PASSWORD=$UCP_ADMIN_PASSWORD -e S3_BUCKET_NAME=$S3_BUCKET_NAME -e LICENSE=\"$LICENSE\" -e UCP_ELB_HOSTNAME=$UCP_ELB_HOSTNAME -e DTR_ELB_HOSTNAME=$DTR_ELB_HOSTNAME -e APP_ELB_HOSTNAME=$APP_ELB_HOSTNAME -e MANAGER_COUNT=$MANAGER_COUNT -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/docker:/tmp/docker -e UCP_TAG=$UCP_TAG -e DTR_TAG=$DTR_TAG eggmuffin/ddc-init-aws:$DOCKER_FOR_IAAS_VERSION\n"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::AutoScaling::LaunchConfiguration"
+        },
+        "NodeVpcSG": {
+            "Properties": {
+                "GroupDescription": "Node SecurityGroup",
+                "SecurityGroupEgress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "8",
+                        "IpProtocol": "icmp",
+                        "ToPort": "0"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "IpProtocol": "50"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "0",
+                        "IpProtocol": "udp",
+                        "ToPort": "65535"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "0",
+                        "IpProtocol": "tcp",
+                        "ToPort": "2374"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "2376",
+                        "IpProtocol": "tcp",
+                        "ToPort": "65535"
+                    }
+                ],
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": {
+                            "Ref": "VpcCidr"
+                        },
+                        "FromPort": "0",
+                        "IpProtocol": "-1",
+                        "ToPort": "65535"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "ProxyInstanceProfile": {
+            "DependsOn": "ProxyRole",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::InstanceProfile"
+        },
+        "ProxyPolicies": {
+            "DependsOn": "ProxyRole",
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                                "elasticloadbalancing:CreateLoadBalancerListeners",
+                                "elasticloadbalancing:DeleteLoadBalancerListeners",
+                                "elasticloadbalancing:ConfigureHealthCheck",
+                                "elasticloadbalancing:DescribeTags",
+                                "elasticloadbalancing:SetLoadBalancerListenerSSLCertificate",
+                                "elasticloadbalancing:DescribeSSLPolicies",
+                                "elasticloadbalancing:DescribeLoadBalancers"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "elb-update",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "ProxyRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com",
+                                    "autoscaling.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Path": "/"
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "S3Policies": {
+            "DependsOn": "ProxyRole",
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "s3:ListBucket",
+                                "s3:GetBucketLocation",
+                                "s3:ListBucketMultipartUploads"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:s3:::",
+                                        {
+                                            "Ref": "DDCBucket"
+                                        }
+                                    ]
+                                ]
+                            }
+                        },
+                        {
+                            "Action": [
+                                "s3:PutObject",
+                                "s3:GetObject",
+                                "s3:DeleteObject",
+                                "s3:ListMultipartUploadParts",
+                                "s3:AbortMultipartUpload"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::Join": [
+                                    "",
+                                    [
+                                        "arn:aws:s3:::",
+                                        {
+                                            "Ref": "DDCBucket"
+                                        },
+                                        "/*"
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "S3-DDC-Policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmAPIPolicy": {
+            "DependsOn": "ProxyRole",
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ec2:DescribeInstances",
+                                "ec2:DescribeVpcAttribute"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "swarm-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmAutoscalePolicy": {
+            "DependsOn": [
+                "ProxyRole",
+                "WorkerRole"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "autoscaling:RecordLifecycleActionHeartbeat",
+                                "autoscaling:CompleteLifecycleAction"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "swarm-autoscale-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    },
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmDynDBTable": {
+            "DependsOn": "ExternalLoadBalancer",
+            "Properties": {
+                "AttributeDefinitions": [
+                    {
+                        "AttributeName": "node_type",
+                        "AttributeType": "S"
+                    }
+                ],
+                "KeySchema": [
+                    {
+                        "AttributeName": "node_type",
+                        "KeyType": "HASH"
+                    }
+                ],
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1
+                },
+                "TableName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "AWS::StackName"
+                            },
+                            "dyndbtable"
+                        ]
+                    ]
+                }
+            },
+            "Type": "AWS::DynamoDB::Table"
+        },
+        "SwarmLogPolicy": {
+            "DependsOn": [
+                "ProxyRole",
+                "WorkerRole"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "swarm-log-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    },
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmManagerUpgradeHook": {
+            "DependsOn": "SwarmSQS",
+            "Properties": {
+                "AutoScalingGroupName": {
+                    "Ref": "ManagerAsg"
+                },
+                "LifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
+                "NotificationTargetARN": {
+                    "Fn::GetAtt": [
+                        "SwarmSQS",
+                        "Arn"
+                    ]
+                },
+                "RoleARN": {
+                    "Fn::GetAtt": [
+                        "ProxyRole",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "AWS::AutoScaling::LifecycleHook"
+        },
+        "SwarmSQS": {
+            "Properties": {
+                "MessageRetentionPeriod": 43200,
+                "ReceiveMessageWaitTimeSeconds": 10
+            },
+            "Type": "AWS::SQS::Queue"
+        },
+        "SwarmSQSCleanup": {
+            "Properties": {
+                "MessageRetentionPeriod": 43200,
+                "ReceiveMessageWaitTimeSeconds": 10
+            },
+            "Type": "AWS::SQS::Queue"
+        },
+        "SwarmSQSCleanupPolicy": {
+            "DependsOn": [
+                "ProxyRole",
+                "WorkerRole",
+                "SwarmSQSCleanup"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sqs:DeleteMessage",
+                                "sqs:ReceiveMessage",
+                                "sqs:SendMessage",
+                                "sqs:GetQueueAttributes",
+                                "sqs:GetQueueUrl",
+                                "sqs:ListQueues"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::GetAtt": [
+                                    "SwarmSQSCleanup",
+                                    "Arn"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "swarm-sqs-cleanup-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    },
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmSQSPolicy": {
+            "DependsOn": [
+                "ProxyRole",
+                "WorkerRole",
+                "SwarmSQS"
+            ],
+            "Properties": {
+                "PolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sqs:DeleteMessage",
+                                "sqs:ReceiveMessage",
+                                "sqs:SendMessage",
+                                "sqs:GetQueueAttributes",
+                                "sqs:GetQueueUrl",
+                                "sqs:ListQueues"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": {
+                                "Fn::GetAtt": [
+                                    "SwarmSQS",
+                                    "Arn"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "PolicyName": "swarm-sqs-policy",
+                "Roles": [
+                    {
+                        "Ref": "ProxyRole"
+                    },
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Policy"
+        },
+        "SwarmWideSG": {
+            "Properties": {
+                "GroupDescription": "Swarm wide access",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": {
+                            "Ref": "VpcCidr"
+                        },
+                        "FromPort": "0",
+                        "IpProtocol": "-1",
+                        "ToPort": "65535"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "SwarmWorkerUpgradeHook": {
+            "DependsOn": "SwarmSQS",
+            "Properties": {
+                "AutoScalingGroupName": {
+                    "Ref": "NodeAsg"
+                },
+                "LifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
+                "NotificationTargetARN": {
+                    "Fn::GetAtt": [
+                        "SwarmSQS",
+                        "Arn"
+                    ]
+                },
+                "RoleARN": {
+                    "Fn::GetAtt": [
+                        "WorkerRole",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "AWS::AutoScaling::LifecycleHook"
+        },
+        "UCPLoadBalancer": {
+            "DependsOn": [
+                "UCPLoadBalancerSG"
+            ],
+            "Properties": {
+                "ConnectionSettings": {
+                    "IdleTimeout": 1800
+                },
+                "CrossZone": "true",
+                "HealthCheck": {
+                    "HealthyThreshold": "2",
+                    "Interval": "60",
+                    "Target": "HTTPS:12390/_ping",
+                    "Timeout": "10",
+                    "UnhealthyThreshold": "10"
+                },
+                "Listeners": [
+                    {
+                        "InstancePort": "12390",
+                        "LoadBalancerPort": "443",
+                        "Protocol": "TCP"
+                    }
+                ],
+                "SecurityGroups": [
+                    {
+                        "Ref": "UCPLoadBalancerSG"
+                    }
+                ],
+                "Subnets": {
+                    "Fn::If": [
+                        "HasOnly2AZs",
+                        [
+                            {
+                                "Ref": "SubnetUCPAz1"
+                            },
+                            {
+                                "Ref": "SubnetUCPAz2"
+                            }
+                        ],
+                        [
+                            {
+                                "Ref": "SubnetUCPAz1"
+                            },
+                            {
+                                "Ref": "SubnetUCPAz2"
+                            },
+                            {
+                                "Ref": "SubnetUCPAz3"
+                            }
+                        ]
+                    ]
+                },
+                "Scheme": {
+                    "Ref": "InternalorPublicELB"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    {
+                                        "Ref": "AWS::StackName"
+                                    },
+                                    "ELB-UCP"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+        },
+        "UCPLoadBalancerSG": {
+            "Properties": {
+                "GroupDescription": "UCP Load Balancer SecurityGroup",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "10.0.0.0/8",
+                        "FromPort": "443",
+                        "IpProtocol": "tcp",
+                        "ToPort": "443"
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "Vpc"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "WorkerInstanceProfile": {
+            "DependsOn": "WorkerRole",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "WorkerRole"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::InstanceProfile"
+        },
+        "WorkerRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com",
+                                    "autoscaling.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Path": "/"
+            },
+            "Type": "AWS::IAM::Role"
+        }
+    }
+}
