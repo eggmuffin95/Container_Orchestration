@@ -44,12 +44,12 @@ variable "windows_worker_instance_type" {
 
 variable "key_name" {
   description = "AWS Key Pair name"
-  default = "YD-AWS-KEY"
+  default = "ydaniel"
 }
 
 variable "key_path" {
   description = "SSH Public Key path"
-  default = "/Users/eggmuffin/.ssh/YD-AWS-LAB-LBN.pem"
+  default = "/Users/eggmuffin/.ssh/keys/AWS_Perso/ydaniel.pem"
 }
 
 variable "bootstrap_path" {
@@ -79,17 +79,17 @@ variable "dtr_bucket_name" {
 
 variable "manager_cluster_size" {
   description = "Number of Manager Nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "worker_cluster_size" {
   description = "Number of Worker Nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "worker_dtr_cluster_size" {
   description = "Number of DTR Worker Nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "windows_worker_cluster_size" {
@@ -99,17 +99,17 @@ variable "windows_worker_cluster_size" {
 
 variable "max_autoscaled_managers_size" {
   description = "Maximum number of autoscaled manager nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "max_autoscaled_workers_size" {
   description = "Maximum number of autoscaled worker nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "max_autoscaled_workers_dtr_size" {
   description = "Maximum number of autoscaled DTR worker nodes"
-  default = "3"
+  default = "1"
 }
 
 variable "max_autoscaled_windows_workers_size" {
@@ -117,22 +117,42 @@ variable "max_autoscaled_windows_workers_size" {
   default = "0"
 }
 
-variable "linux_manager_volume_size" {
-  description = "The volume size in GB for Linux managers"
-  default     = "100"
+variable "linux_manager_volume_system_size" {
+  description = "The system volume size in GB for Linux managers"
+  default     = "8"
 }
 
-variable "linux_worker_volume_size" {
-  description = "The volume size in GB for Linux workers"
-  default     = "20"
+variable "linux_manager_volume_data_size" {
+  description = "The data volume size in GB for Linux managers"
+  default     = "10"
 }
 
-variable "Linux_dtr_worker_volume_size" {
-  description = "The volume size in GB for Linux DTR workers"
-  default     = "100"
+variable "linux_worker_volume_system_size" {
+  description = "The system volume size in GB for Linux workers"
+  default     = "8"
 }
 
-variable "windows_worker_volume_size" {
-  description = "The volume size in GB for Windows workers"
-  default     = "100"
+variable "linux_worker_volume_data_size" {
+  description = "The data volume size in GB for Linux workers"
+  default     = "10"
+}
+
+variable "Linux_dtr_worker_volume_system_size" {
+  description = "The system volume size in GB for Linux DTR workers"
+  default     = "8"
+}
+
+variable "Linux_dtr_worker_volume_data_size" {
+  description = "The data volume size in GB for Linux DTR workers"
+  default     = "10"
+}
+
+variable "windows_worker_volume_system_size" {
+  description = "The system volume size in GB for Windows workers"
+  default     = "10"
+}
+
+variable "windows_worker_volume_data_size" {
+  description = "The data volume size in GB for Windows workers"
+  default     = "10"
 }
