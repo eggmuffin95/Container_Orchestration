@@ -8,6 +8,20 @@ variable "ami" {
   default = "ami-0d063c6b"
 }
 
+variable "efs_supported" {
+  description = "Set to '1' if the AWS region supports EFS, or 0 if not (see https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)."
+}
+
+variable "linux_user" {
+  description = "CentOS user"
+  default = "centos"
+}
+
+variable "windows_user" {
+  description = "Windows user"
+  default = "Administrator"
+}
+
 variable "linux_manager_instance_type" {
   description = "Manager Instance type"
   default = "m4.large"
@@ -18,7 +32,7 @@ variable "linux_worker_instance_type" {
   default = "m4.large"
 }
 
-variable "dtr_instance_type" {
+variable "linux_dtr_instance_type" {
   description = "DTR Instance type"
   default = "m4.large"
 }
@@ -26,6 +40,11 @@ variable "dtr_instance_type" {
 variable "windows_worker_instance_type" {
   description = "Windows Worker Instance type"
   default = "m4.large"
+}
+
+variable "key_name" {
+  description = "AWS Key Pair name"
+  default = "YD-AWS-KEY"
 }
 
 variable "key_path" {
@@ -40,7 +59,7 @@ variable "bootstrap_path" {
 
 variable "remote_ssh_range" {
   description = "Remote IP range authorized to SSH"
-  default = "172.30.0.0/16"
+  default = "${var.vpc_ip_range}"
 }
 
 variable "remote_access_range" {
@@ -68,7 +87,52 @@ variable "worker_cluster_size" {
   default = "3"
 }
 
+variable "worker_dtr_cluster_size" {
+  description = "Number of DTR Worker Nodes"
+  default = "3"
+}
+
+variable "windows_worker_cluster_size" {
+  description = "Number of Windows Worker Nodes"
+  default = "0"
+}
+
 variable "max_autoscaled_managers_size" {
   description = "Maximum number of autoscaled manager nodes"
   default = "3"
+}
+
+variable "max_autoscaled_workers_size" {
+  description = "Maximum number of autoscaled worker nodes"
+  default = "3"
+}
+
+variable "max_autoscaled_workers_dtr_size" {
+  description = "Maximum number of autoscaled DTR worker nodes"
+  default = "3"
+}
+
+variable "max_autoscaled_windows_workers_size" {
+  description = "Maximum number of autoscaled Windows worker nodes"
+  default = "0"
+}
+
+variable "linux_manager_volume_size" {
+  description = "The volume size in GB for Linux managers"
+  default     = "100"
+}
+
+variable "linux_worker_volume_size" {
+  description = "The volume size in GB for Linux workers"
+  default     = "20"
+}
+
+variable "Linux_dtr_worker_volume_size" {
+  description = "The volume size in GB for Linux DTR workers"
+  default     = "100"
+}
+
+variable "windows_worker_volume_size" {
+  description = "The volume size in GB for Windows workers"
+  default     = "100"
 }

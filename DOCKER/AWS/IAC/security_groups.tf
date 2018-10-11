@@ -162,3 +162,23 @@ resource "aws_security_group" "dtr" {
     delete = "1h"
   }
 }
+
+resource "aws_security_group" "efs" {
+  name        = "${var.deployment}_efs-default"
+  description = "Defaut Security Group for EFS Access"
+  vpc_id      = "${aws_vpc.docker.id}"
+
+  ingress {
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "-1"
+    cidr_block  = "${var.vpc_ip_range}"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
