@@ -77,22 +77,22 @@ variable "dtr_bucket_name" {
   default = "DTR-Bucket"
 }
 
-variable "manager_cluster_size" {
+variable "managers_cluster_size" {
   description = "Number of Manager Nodes"
   default = "1"
 }
 
-variable "worker_cluster_size" {
+variable "workers_cluster_size" {
   description = "Number of Worker Nodes"
   default = "1"
 }
 
-variable "worker_dtr_cluster_size" {
+variable "dtr_workers_cluster_size" {
   description = "Number of DTR Worker Nodes"
   default = "1"
 }
 
-variable "windows_worker_cluster_size" {
+variable "windows_workers_cluster_size" {
   description = "Number of Windows Worker Nodes"
   default = "0"
 }
@@ -107,7 +107,7 @@ variable "max_autoscaled_workers_size" {
   default = "1"
 }
 
-variable "max_autoscaled_workers_dtr_size" {
+variable "max_autoscaled_dtr_workers_size" {
   description = "Maximum number of autoscaled DTR worker nodes"
   default = "1"
 }
