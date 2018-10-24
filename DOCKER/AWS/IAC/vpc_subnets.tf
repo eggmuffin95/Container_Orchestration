@@ -1,114 +1,58 @@
-resource "aws_subnet" "SubnetSwarm1" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.10.0/24"
+resource "aws_subnet" "SubnetSwarm" {
+  vpc_id = "${aws_vpc.docker.id}"
+  count  = "${length("${data.aws_availability_zones.available.names}")}"
 
-  tags {
-    Name = "SubnetSwarm1"
+  cidr_block              = "${cidrsubnet("${var.swarm_cidr}", 2, count.index)}"
+  map_public_ip_on_launch = "${var.scheme_subnets}"
+  availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
+
+  tags = {
+    Name = "${format("%s-SubnetSwarm-%d", "${var.deployment}", count.index + 1)}"
   }
 }
 
-resource "aws_subnet" "SubnetSwarm2" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.11.0/24"
+resource "aws_subnet" "SubnetExternal" {
+  vpc_id = "${aws_vpc.docker.id}"
+  count  = "${length("${data.aws_availability_zones.available.names}")}"
 
-  tags {
-    Name = "SubnetSwarm2"
+  cidr_block              = "${cidrsubnet("${var.ext_cidr}", 2, count.index)}"
+  map_public_ip_on_launch = "${var.scheme_subnets}"
+  availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
+
+  tags = {
+    Name = "${format("%s-SubnetExternal-%d", "${var.deployment}", count.index + 1)}"
   }
 }
 
-resource "aws_subnet" "SubnetSwarm3" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.12.0/24"
+resource "aws_subnet" "SubnetUCP" {
+  vpc_id = "${aws_vpc.docker.id}"
+  count  = "${length("${data.aws_availability_zones.available.names}")}"
 
-  tags {
-    Name = "SubnetSwarm3"
+  cidr_block              = "${cidrsubnet("${var.ucp_cidr}", 2, count.index)}"
+  map_public_ip_on_launch = "${var.scheme_subnets}"
+  availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
+
+  tags = {
+    Name = "${format("%s-SubnetUCP-%d", "${var.deployment}", count.index + 1)}"
   }
 }
 
-resource "aws_subnet" "SubnetExternal1" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.13.0/24"
+resource "aws_subnet" "SubnetDTR" {
+  vpc_id = "${aws_vpc.docker.id}"
+  count  = "${length("${data.aws_availability_zones.available.names}")}"
 
-  tags {
-    Name = "${format("%s-SubnetExternal1", "${var.deployment}")}"
-  }
-}
+  cidr_block              = "${cidrsubnet("${var.dtr_cidr}", 2, count.index)}"
+  map_public_ip_on_launch = "${var.scheme_subnets}"
+  availability_zone       = "${element(data.aws_availability_zones.available.names, count.index)}"
 
-resource "aws_subnet" "SubnetExternal2" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.14.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetExternal2", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetExternal3" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.15.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetExternal3", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetUCP1" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.16.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetUCP1", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetUCP2" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.17.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetUCP2", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetUCP3" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.18.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetUCP3", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetDTR1" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.19.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetDTR1", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetDTR2" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.20.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetDTR2", "${var.deployment}")}"
-  }
-}
-
-resource "aws_subnet" "SubnetDTR3" {
-  vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.21.0/24"
-
-  tags {
-    Name = "${format("%s-SubnetDTR3", "${var.deployment}")}"
+  tags = {
+    Name = "${format("%s-SubnetDTR-%d", "${var.deployment}", count.index + 1)}"
   }
 }
 
 resource "aws_subnet" "SubnetPUB" {
   vpc_id     = "${aws_vpc.docker.id}"
-  cidr_block = "172.30.22.0/24"
+  cidr_block = "${var.pub_cidr}"
 
   tags {
     Name = "${format("%s-SubnetPUB", "${var.deployment}")}"

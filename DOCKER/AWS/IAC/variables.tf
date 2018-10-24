@@ -8,8 +8,33 @@ variable "ami" {
   default = "ami-0d063c6b"
 }
 
+variable "deployment" {
+  description = "Deployment Suffix for Object Name"
+  default = "ddc"
+}
+
+variable "scheme_elb" {
+  description = "Chose to deploy ELB in a private network scheme or not"
+  default = "false"
+}
+
+variable "scheme_subnets" {
+  description = "Chose to map subnets with public network scheme or not"
+  default = "true"
+}
+
+variable "scheme_ec2" {
+  description = "Chose to map public ip's on EC2 instances or not"
+  default = "true"
+}
+
 variable "efs_supported" {
   description = "Set to '1' if the AWS region supports EFS, or 0 if not (see https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/)."
+}
+
+variable "efs_performance" {
+  description = "Set efs performance to generalPurpose or maxIO"
+  default = "generalPurpose"
 }
 
 variable "linux_user" {
@@ -24,22 +49,22 @@ variable "windows_user" {
 
 variable "linux_manager_instance_type" {
   description = "Manager Instance type"
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "linux_worker_instance_type" {
   description = "Worker Instance type"
-  default = "m4.large"
+  default = "t2.medium"
 }
 
-variable "linux_dtr_instance_type" {
+variable "linux_dtr_worker_instance_type" {
   description = "DTR Instance type"
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "windows_worker_instance_type" {
   description = "Windows Worker Instance type"
-  default = "m4.large"
+  default = "t2.medium"
 }
 
 variable "key_name" {
@@ -52,14 +77,9 @@ variable "key_path" {
   default = "/Users/eggmuffin/.ssh/keys/AWS_Perso/ydaniel.pem"
 }
 
-variable "bootstrap_path" {
-  description = "Script to install Docker Engine"
-  default = "install-docker.sh"
-}
-
 variable "remote_ssh_range" {
   description = "Remote IP range authorized to SSH"
-  default = "${var.vpc_ip_range}"
+  default = "0.0.0.0/0"
 }
 
 variable "remote_access_range" {
@@ -72,9 +92,39 @@ variable "vpc_ip_range" {
   default = "172.30.0.0/16"
 }
 
+variable "swarm_cidr" {
+  description = "Swarm Global IP Range"
+  default = "172.30.0.0/22"
+}
+
+variable "ucp_cidr" {
+  description = "UCP Global IP Range"
+  default = "172.30.4.0/22"
+}
+
+variable "dtr_cidr" {
+  description = "DTR Global IP Range"
+  default = "172.30.8.0/22"
+}
+
+variable "ext_cidr" {
+  description = "External Global IP Range"
+  default = "172.30.12.0/22"
+}
+
+variable "pub_cidr" {
+  description = "Public Global IP Range"
+  default = "172.30.16.0/25"
+}
+
 variable "dtr_bucket_name" {
   description = "DTR S3 Bucket Name"
-  default = "DTR-Bucket"
+  default = "dtr"
+}
+
+variable "access_logs_bucket_name" {
+  description = "Access Logs S3 Bucket Name"
+  default = "access-logs"
 }
 
 variable "managers_cluster_size" {
@@ -94,6 +144,26 @@ variable "dtr_workers_cluster_size" {
 
 variable "windows_workers_cluster_size" {
   description = "Number of Windows Worker Nodes"
+  default = "0"
+}
+
+variable "min_autoscaled_managers_size" {
+  description = "Minimum number of autoscaled manager nodes"
+  default = "1"
+}
+
+variable "min_autoscaled_workers_size" {
+  description = "Minimum number of autoscaled worker nodes"
+  default = "1"
+}
+
+variable "min_autoscaled_dtr_workers_size" {
+  description = "Minimum number of autoscaled DTR worker nodes"
+  default = "1"
+}
+
+variable "min_autoscaled_windows_workers_size" {
+  description = "Minimum number of autoscaled Windows worker nodes"
   default = "0"
 }
 
@@ -117,6 +187,21 @@ variable "max_autoscaled_windows_workers_size" {
   default = "0"
 }
 
+variable "delete_root_ebs" {
+  description = "Chose to delete on instance termination EBS root volume or not"
+  default = "true"
+}
+
+variable "delete_data_ebs" {
+  description = "Chose to delete on instance termination EBS data volume or not"
+  default = "true"
+}
+
+variable "ebs_optimized" {
+  description = "chose to deploy EBS Optimized volume or not"
+  default = "false"
+}
+
 variable "linux_manager_volume_system_size" {
   description = "The system volume size in GB for Linux managers"
   default     = "8"
@@ -137,12 +222,12 @@ variable "linux_worker_volume_data_size" {
   default     = "10"
 }
 
-variable "Linux_dtr_worker_volume_system_size" {
+variable "linux_dtr_worker_volume_system_size" {
   description = "The system volume size in GB for Linux DTR workers"
   default     = "8"
 }
 
-variable "Linux_dtr_worker_volume_data_size" {
+variable "linux_dtr_worker_volume_data_size" {
   description = "The data volume size in GB for Linux DTR workers"
   default     = "10"
 }
@@ -155,4 +240,14 @@ variable "windows_worker_volume_system_size" {
 variable "windows_worker_volume_data_size" {
   description = "The data volume size in GB for Windows workers"
   default     = "10"
+}
+
+variable "ansible_inventory" {
+  description = "Path where the ansible inventory is stored"
+  default = "./inventory/1.hosts"
+}
+
+variable "bootstrap_path" {
+  description = "Path where the instance user data script is stored"
+  default = "./user-data.sh"
 }

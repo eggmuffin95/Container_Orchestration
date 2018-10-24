@@ -9,14 +9,29 @@ resource "aws_security_group" "ddc" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_ssh_range}"
+    cidr_blocks = ["${var.remote_ssh_range}"]
   }
 
   ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = "${var.vpc_ip_range}"
+    cidr_blocks = ["${var.vpc_ip_range}"]
+  }
+
+  # EFS
+  ingress {
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = ["${var.vpc_ip_range}"]
+  }
+
+  ingress {
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "udp"
+    cidr_blocks = ["${var.vpc_ip_range}"]
   }
 
   # Kubernetes API
@@ -24,7 +39,7 @@ resource "aws_security_group" "ddc" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = "${var.vpc_ip_range}"
+    cidr_blocks = ["${var.vpc_ip_range}"]
   }
 
   # WinRM HTTP & HTTPS remote access - needed for Ansible
@@ -32,14 +47,14 @@ resource "aws_security_group" "ddc" {
     from_port   = 5985
     to_port     = 5985
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   ingress {
     from_port   = 5986
     to_port     = 5986
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   # best to comment RDP access out after initial deployment testing!
@@ -47,7 +62,7 @@ resource "aws_security_group" "ddc" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   ingress {
@@ -66,6 +81,10 @@ resource "aws_security_group" "ddc" {
 
   timeouts {
     delete = "1h"
+  }
+
+  tags {
+    Name = "${format("%s-ddc-default-sg", "${var.deployment}")}"
   }
 }
 
@@ -98,6 +117,10 @@ resource "aws_security_group" "apps" {
   timeouts {
     delete = "1h"
   }
+
+  tags {
+    Name = "${format("%s-apps-default-sg", "${var.deployment}")}"
+  }
 }
 
 resource "aws_security_group" "elb" {
@@ -109,7 +132,7 @@ resource "aws_security_group" "elb" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   # Kubernetes API
@@ -117,7 +140,7 @@ resource "aws_security_group" "elb" {
     from_port   = 6443
     to_port     = 6443
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   egress {
@@ -129,6 +152,10 @@ resource "aws_security_group" "elb" {
 
   timeouts {
     delete = "1h"
+  }
+
+  tags {
+    Name = "${format("%s-elb-default-sg", "${var.deployment}")}"
   }
 }
 
@@ -141,14 +168,14 @@ resource "aws_security_group" "dtr" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = "${var.remote_access_range}"
+    cidr_blocks = ["${var.remote_access_range}"]
   }
 
   egress {
@@ -161,24 +188,8 @@ resource "aws_security_group" "dtr" {
   timeouts {
     delete = "1h"
   }
-}
 
-resource "aws_security_group" "efs" {
-  name        = "${var.deployment}_efs-default"
-  description = "Defaut Security Group for EFS Access"
-  vpc_id      = "${aws_vpc.docker.id}"
-
-  ingress {
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "-1"
-    cidr_block  = "${var.vpc_ip_range}"
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  tags {
+    Name = "${format("%s-dtr-default-sg", "${var.deployment}")}"
   }
 }

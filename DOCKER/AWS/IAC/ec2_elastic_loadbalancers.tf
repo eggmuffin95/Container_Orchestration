@@ -1,11 +1,13 @@
-resource "aws_elb" "ucp" {
-  name = "${var.deployment}-ucp"
+#ELBs
 
-  security_groups = [
-    "${aws_security_group.elb.id}",
-  ]
+resource "aws_elb" "ucp-elb" {
+  name = "${var.deployment}-ucp-elb"
 
-  subnets = ["${aws_subnet.SubnetUCP*.id}"]
+  security_groups = ["${aws_security_group.elb.id}"]
+
+  subnets = ["${aws_subnet.SubnetUCP.*.id}"]
+
+  internal = "${var.scheme_elb}"
 
   listener {
     instance_port     = 443
@@ -29,20 +31,19 @@ resource "aws_elb" "ucp" {
     interval            = 30
   }
 
-  instances                 = ["${aws_instance.ucp_manager_linux.*.id}"]
   idle_timeout              = 240
   cross_zone_load_balancing = true
   depends_on                = ["aws_internet_gateway.igw"]
 }
 
-resource "aws_elb" "apps" {
-  name = "${var.deployment}-apps"
+resource "aws_elb" "apps-elb" {
+  name = "${var.deployment}-apps-elb"
 
-  security_groups = [
-    "${aws_security_group.apps.id}",
-  ]
+  security_groups = ["${aws_security_group.apps.id}"]
 
-  subnets = ["${aws_subnet.SubnetExternal*.id}"]
+  subnets = ["${aws_subnet.SubnetExternal.*.id}"]
+
+  internal = "${var.scheme_elb}"
 
   listener {
     instance_port     = 8443
@@ -62,23 +63,22 @@ resource "aws_elb" "apps" {
     healthy_threshold   = 2
     unhealthy_threshold = 10
     timeout             = 5
-    target              = "TCP:443"
+    target              = "TCP:8443"
     interval            = 30
   }
 
-  instances                 = ["${aws_instance.ucp_worker_linux.*.id}"]
   cross_zone_load_balancing = true
   depends_on                = ["aws_internet_gateway.igw"]
 }
 
-resource "aws_elb" "dtr" {
-  name = "${var.deployment}-dtr"
+resource "aws_elb" "dtr-elb" {
+  name = "${var.deployment}-dtr-elb"
 
-  security_groups = [
-    "${aws_security_group.dtr.id}",
-  ]
+  security_groups = ["${aws_security_group.dtr.id}"]
 
-  subnets = ["${aws_subnet.SubnetDTR*.id}"]
+  subnets = ["${aws_subnet.SubnetDTR.*.id}"]
+
+  internal = "${var.scheme_elb}"
 
   listener {
     instance_port     = 443
@@ -102,7 +102,6 @@ resource "aws_elb" "dtr" {
     interval            = 30
   }
 
-  instances                 = ["${aws_instance.ucp_worker_dtr.*.id}"]
   idle_timeout              = 240
   cross_zone_load_balancing = true
   depends_on                = ["aws_internet_gateway.igw"]
