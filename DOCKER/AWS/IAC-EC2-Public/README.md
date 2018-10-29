@@ -8,7 +8,7 @@ These files allow to :
 - ```terraform plan -out=tfplan -input=false```
 - ```terraform apply "tfplan"```
 
-# Deploy a full Docker EE Orchestration Platform with UCP Master, DTR dedicated Workers Linux Workers and Windows Workers using Ansible.
+# Deploy a full Docker EE Orchestration Platform with UCP Masters, DTR dedicated Workers Linux Workers and Windows Workers using Ansible.
 
 ## You can specify your own values in groupvars files.
 ## To run installation, just send the following command :
