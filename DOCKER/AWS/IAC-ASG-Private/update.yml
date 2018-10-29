@@ -1,0 +1,38 @@
+---
+- name: "Install Docker EE"
+  hosts: all
+  roles:
+  - role: docker-ee
+  tags:
+  - engine
+  vars:
+    docker_ee_subscriptions:
+      CentOS: "{{ docker_ee_subscriptions_centos|default(omit) }}"
+    docker_ee_role_mode: "update"
+
+- name: "Update UCP"
+  hosts: ucp
+  roles:
+  - role: docker-ucp
+  tags:
+  - ucp
+  - UCP
+  vars:
+    docker_ucp_role_mode: "update"
+
+- name: "Update DTR"
+  hosts: dtr
+  roles:
+  - role: docker-dtr
+  serial: 1
+  tags:
+  - dtr
+  - DTR
+  vars:
+    docker_dtr_role_mode: "update"
+    ucp_nodes: managers
+
+#
+# Get the logs.
+#
+- import_playbook: "logs.yml"

@@ -1,0 +1,12 @@
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xb3e5a0), templateFunc:(configtracker.TemplateFunc)(0xb3cf70), cacheKey:\"e0f07bfe-d72e-43ce-9728-b504f5329b8d\"}","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_server/cert.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xb3e5a0), templateFunc:(configtracker.TemplateFunc)(0xb3cf70), cacheKey:\"b241e5b3-b098-4da3-bbe7-1daf7af7bf6c\"}","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_server/key.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xb3e5a0), templateFunc:(configtracker.TemplateFunc)(0xb3cf70), cacheKey:\"92862951-7b10-4666-9ad6-f05b49acaa97\"}","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_signing_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xb3e5a0), templateFunc:(configtracker.TemplateFunc)(0xb3cf70), cacheKey:\"34b07ed1-e568-47b9-a328-08ac240236bf\"}","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_signing_ca/key.pem\", writer:(configtracker.WriterFunc)(0xb3e5a0), templateFunc:(configtracker.TemplateFunc)(0xb3cf70), cacheKey:\"f1b98302-4a20-4a8e-95e0-c95776ba6e33\"}","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"garant starting","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:51:28Z"}
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:51:28Z"}
+{"authBackend":"dtr","go.version":"go1.8.3","instance.id":"6d2ae397-4781-4e38-b92b-70cff4595ff2","level":"info","msg":"token signing app initialized","signingKeyID":"J2GY:ECTV:CJ75:QCHP:T4WG:VQVV:3PPI:L4M2:QTEJ:BBEV:7QA6:MXCV","time":"2018-10-29T17:51:28.429053014Z"}

@@ -1,0 +1,65 @@
+-- Logs begin at lun. 2018-10-29 17:41:27 UTC, end at lun. 2018-10-29 17:52:35 UTC. --
+oct. 29 17:44:41 ip-172-30-0-10 systemd[1]: Starting Docker Application Container Engine...
+oct. 29 17:44:41 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:41.527009077Z" level=warning msg="libcontainerd: makeUpgradeProof could not open /var/run/docker/libcontainerd/containerd"
+oct. 29 17:44:41 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:41.529769048Z" level=info msg="libcontainerd: new containerd process, pid: 10976"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.531311396Z" level=warning msg="failed to rename /var/lib/docker/tmp for background deletion: rename /var/lib/docker/tmp /var/lib/docker/tmp-old: no such file or directory. Deleting synchronously"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.599208024Z" level=warning msg="devmapper: Usage of loopback devices is strongly discouraged for production use. Please use `--storage-opt dm.thinpooldev` or use `man docker` to refer to dm.thinpooldev section."
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.621262483Z" level=info msg="devmapper: Creating filesystem xfs on device docker-202:80-12582977-base"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.680202749Z" level=info msg="devmapper: Successfully created filesystem xfs on device docker-202:80-12582977-base"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.734958243Z" level=info msg="Graph migration to content-addressability took 0.00 seconds"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.736133612Z" level=info msg="Loading containers: start."
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.935405285Z" level=info msg="Default bridge (docker0) is assigned with an IP address 172.17.0.0/16. Daemon option --bip can be used to set a preferred IP address"
+oct. 29 17:44:42 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:42.996059412Z" level=info msg="Loading containers: done."
+oct. 29 17:44:43 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:43.007140022Z" level=info msg="Daemon has completed initialization"
+oct. 29 17:44:43 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:43.007170819Z" level=info msg="Docker daemon" commit=ac44d73 graphdriver=devicemapper version=17.06.2-ee-13
+oct. 29 17:44:43 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:43.014852993Z" level=info msg="API listen on /var/run/docker.sock"
+oct. 29 17:44:43 ip-172-30-0-10 systemd[1]: Started Docker Application Container Engine.
+oct. 29 17:44:45 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:45Z" level=info msg="time=\"2018-10-29T17:44:45Z\" level=info msg=\"Docker Inc. usage statistics plugin\" anonymous_id=ebfc7545-624b-4e9e-a63a-368a9a99bdb5 plugin_version=1.0.0-stable " plugin=d92884dcfb81d54ae1aae860fdf68d6b4b75da0868f6fc74ae0e2451b0157e65
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.508451074Z" level=info msg="Listening for connections" addr="[::]:2377" module=node node.id=v9fj2jrlekefrs04d7rtcd4h9 proto=tcp
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.509764516Z" level=info msg="Listening for local connections" addr="/var/run/docker/swarm/control.sock" module=node node.id=v9fj2jrlekefrs04d7rtcd4h9 proto=unix
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.513753850Z" level=info msg="550818c236606e3c became follower at term 0" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.513808571Z" level=info msg="newRaft 550818c236606e3c [peers: [], term: 0, commit: 0, applied: 0, lastindex: 0, lastterm: 0]" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.513836066Z" level=info msg="550818c236606e3c became follower at term 1" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.515273937Z" level=info msg="550818c236606e3c is starting a new election at term 1" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.515360823Z" level=info msg="550818c236606e3c became candidate at term 2" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.515394627Z" level=info msg="550818c236606e3c received MsgVoteResp from 550818c236606e3c at term 2" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.515433198Z" level=info msg="550818c236606e3c became leader at term 2" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.515456585Z" level=info msg="raft.node: 550818c236606e3c elected leader 550818c236606e3c at term 2" module=raft node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.517239475Z" level=info msg="Creating default ingress network" module=node node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.629969721Z" level=info msg="Initializing Libnetwork Agent Listen-Addr=0.0.0.0 Local-addr=172.30.0.10 Adv-addr=172.30.0.10 Data-addr= Remote-addr-list=[]"
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.630025696Z" level=info msg="Gossip cluster hostname ip-172-30-0-10-187f7add15a9"
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.631236890Z" level=info msg="Node ip-172-30-0-10-187f7add15a9/172.30.0.10, joined gossip cluster"
+oct. 29 17:44:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:44:49.631316986Z" level=info msg="Node ip-172-30-0-10-187f7add15a9/172.30.0.10, added to nodes list"
+oct. 29 17:45:00 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:45:00.824913979Z" level=error msg="Error getting service ucp-agent: service ucp-agent not found"
+oct. 29 17:45:03 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:45:03.311039251Z" level=warning msg="container kill failed because of 'container not found' or 'no such process': Cannot kill container 52f13c669301b852485dd636856536594184d7c16a8ce20e0989c1cbc8033923: rpc error: code = 2 desc = no such process"
+oct. 29 17:46:32 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:46:32.232203551Z" level=error msg="Error getting service ucp-agent: service ucp-agent not found"
+oct. 29 17:46:57 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:46:57.548059849Z" level=error msg="Error creating service ucp-agent-win: rpc error: code = 2 desc = name conflicts with an existing object"
+oct. 29 17:46:57 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:46:57.570746321Z" level=error msg="Error creating service ucp-agent-s390x: rpc error: code = 2 desc = name conflicts with an existing object"
+oct. 29 17:47:07 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:07.389874859Z" level=error msg="Error getting service ucp-auth-api-s390x: service ucp-auth-api-s390x not found"
+oct. 29 17:47:07 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:07.421519345Z" level=error msg="Error getting service ucp-auth-worker-s390x: service ucp-auth-worker-s390x not found"
+oct. 29 17:47:07 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:07.434980099Z" level=error msg="Error getting service ucp-auth-worker: service ucp-auth-worker not found"
+oct. 29 17:47:07 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:07.598134258Z" level=error msg="Error getting service ucp-auth-api: service ucp-auth-api not found"
+oct. 29 17:47:13 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:13.073582404Z" level=error msg="Error getting service ucp-interlock: service ucp-interlock not found"
+oct. 29 17:47:34 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:34.938466607Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 3f31aeabd0ddff49b06ea218556c0617b93a92e6a6d8ca09cac39422f099bc6d"
+oct. 29 17:47:35 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:35.446166229Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 0da3261a3cdc6604982818f792625c62632e4b9c315f742fa62f3e5665c3884d"
+oct. 29 17:47:36 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:36.587670694Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 3d61d204801d0a77623ac96fbd6acb65142325d023624b08b7237a4293f8e13c"
+oct. 29 17:47:47 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:47.353006514Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 51b931fece58014dc487e7b563e816754ac1b9596444604214abd1984e88680c"
+oct. 29 17:47:50 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:50.184075377Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container f411b4598cb16b5e69222d16eff200554d2e356d1b7fa81b248afa37855c6169"
+oct. 29 17:47:50 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:50.815873241Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container bf420e1abbf9947e41df37df11141b1e58d4b7e0f849067d420d0558ec1c885e"
+oct. 29 17:47:51 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:51.750416137Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 2767b45aea81d325ef3149f54e258b5a05acd960bcdeda60a5e6bf7b74c71226"
+oct. 29 17:47:52 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:52.140222190Z" level=warning msg="Unknown healthcheck type 'NONE' (expected 'CMD') in container 129f83c6c027b854f4b801a70584eb5c5c2c386666e28472df22a44bf737ee5b"
+oct. 29 17:47:55 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:55.870714826Z" level=info msg="Node ip-172-30-0-177-12bcb42a523a/172.30.0.177, joined gossip cluster"
+oct. 29 17:47:55 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:55.870761786Z" level=info msg="Node ip-172-30-0-177-12bcb42a523a/172.30.0.177, added to nodes list"
+oct. 29 17:47:56 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:56.074125031Z" level=info msg="Node ip-172-30-0-238-d4a21aac228c/172.30.0.238, joined gossip cluster"
+oct. 29 17:47:56 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:47:56.074169944Z" level=info msg="Node ip-172-30-0-238-d4a21aac228c/172.30.0.238, added to nodes list"
+oct. 29 17:48:24 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:48:24.344773159Z" level=error msg="plugin not found"
+oct. 29 17:48:28 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:48:28.373501386Z" level=error msg="plugin not found"
+oct. 29 17:48:29 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:48:29.556115813Z" level=info msg="agent: found node update" module="node/agent" node.id=v9fj2jrlekefrs04d7rtcd4h9
+oct. 29 17:49:04 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:49:04.647792745Z" level=error msg="plugin not found"
+oct. 29 17:49:49 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:49:49.631572575Z" level=info msg="NetworkDB stats - netID:scodp5dpuwpllkdywunqw0ifr leaving:false netPeers:3 entries:6 Queue qLen:0 netMsg/s:0"
+oct. 29 17:49:57 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:49:57.827761165Z" level=error msg="plugin not found"
+oct. 29 17:50:24 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:50:24.344545178Z" level=error msg="plugin not found"
+oct. 29 17:50:34 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:50:34.925570097Z" level=error msg="plugin not found"
+oct. 29 17:51:22 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:51:22.911207494Z" level=error msg="plugin not found"
+oct. 29 17:51:24 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:51:24.379693935Z" level=error msg="plugin not found"
+oct. 29 17:52:19 ip-172-30-0-10 dockerd[10970]: time="2018-10-29T17:52:19.909980813Z" level=error msg="plugin not found"

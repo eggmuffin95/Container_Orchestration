@@ -1,0 +1,50 @@
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"a9e1f787-75f5-48f8-894a-eb80f98519b6\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_server/cert.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"57fa4308-a61b-4755-bcdd-28dbf61b6fc4\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_server/key.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"e93cb16c-0b18-4e4a-8e5e-ba670deb7f10\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"storage.yml\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xfe6f30), cacheKey:\"5361e344-29b3-4fb9-a5dd-6d376f3e12c0\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_signing_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"c93cf5cd-1488-4af1-a074-ba91677c8ed7\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"ha.json\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf86a0), cacheKey:\"42de0674-8026-49b0-9c86-81b89c7e3b4e\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"ha.json\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf86a0), cacheKey:\"db5eed4a-d2bb-40c9-aa6e-8d8f8b4a96f0\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"metadataStoreOptedIn\", writer:(configtracker.WriterFunc)(0xbf8310), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"74b6c31b-9b32-459e-b0df-f65cda7085be\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"blobLinksMigrated\", writer:(configtracker.WriterFunc)(0xbf8310), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"57c72424-0ae7-4b51-8386-514cc4f477bd\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"no longer in read-only mode: property not set","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"license.json\", writer:(configtracker.WriterFunc)(0xc1fe90), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"caf23fb7-e8ac-4597-a0bb-cceaeebab99e\"}","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:51:23Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"license.json\", writer:(configtracker.WriterFunc)(0xc1fe90), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"355b32fc-7d65-4253-bb18-a8c1b6679497\"}","time":"2018-10-29T17:51:23Z"}
+{"go.version":"go1.8.3","instance.id":"73b9a8a7-e8c4-4e46-8956-b36556bd870d","level":"info","msg":"redis not configured","time":"2018-10-29T17:51:23.188161696Z","version":"v2.6.0+unknown"}
+{"go.version":"go1.8.3","instance.id":"73b9a8a7-e8c4-4e46-8956-b36556bd870d","level":"info","msg":"listening on [::]:5000, tls","time":"2018-10-29T17:51:23.188930265Z","version":"v2.6.0+unknown"}
+{"go.version":"go1.8.3","instance.id":"73b9a8a7-e8c4-4e46-8956-b36556bd870d","level":"info","msg":"Starting upload purge in 39m0s","time":"2018-10-29T17:51:23.18903914Z","version":"v2.6.0+unknown"}
+{"level":"info","msg":"change notified for storage.yml","time":"2018-10-29T17:52:10.210041353Z"}
+{"level":"info","msg":"acquiring restart lock","time":"2018-10-29T17:52:10.212367859Z"}
+{"level":"fatal","msg":"Config changed. Restarting","time":"2018-10-29T17:52:10.225505173Z"}
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:52:10Z"}
+{"level":"info","msg":"Establishing connection with Rethinkdb","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"1c8f1e60-8d14-45fc-87a5-dadb54757105\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_server/cert.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"71e6c748-ce1b-4d0b-9cbe-864f10b23971\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/registry_server/key.pem/124d8d91cccc\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"ffd18ee3-bfc0-4fda-a7ef-bc8eec111591\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"storage.yml\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xfe6f30), cacheKey:\"bf8994fe-1b69-42e6-9100-6d409ef6dfb3\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"certs/garant_signing_ca/cert.pem\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"f2cdd0df-8fa5-43c2-95b8-d1717039d62a\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"ha.json\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf86a0), cacheKey:\"4b42aecd-f783-4ffe-82a7-d576fdd569aa\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"ha.json\", writer:(configtracker.WriterFunc)(0xbf9110), templateFunc:(configtracker.TemplateFunc)(0xbf86a0), cacheKey:\"d862fb26-9573-4f53-b1d8-c12ed35a2bfe\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"metadataStoreOptedIn\", writer:(configtracker.WriterFunc)(0xbf8310), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"ec8b1e4d-d158-4ea4-9913-ccdce48b5015\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"blobLinksMigrated\", writer:(configtracker.WriterFunc)(0xbf8310), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"aac6a907-cecd-4ffb-b4c6-9139b71161bd\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"unlocked restart lock","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"no longer in read-only mode: property not set","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"license.json\", writer:(configtracker.WriterFunc)(0xc1fe90), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"344e13cb-5927-4caf-be7d-a2dac7894da2\"}","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"writing out configs and watching for changes","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching configs","time":"2018-10-29T17:52:11Z"}
+{"level":"info","msg":"watching for changes to configtracker.configSpec{src:\"license.json\", writer:(configtracker.WriterFunc)(0xc1fe90), templateFunc:(configtracker.TemplateFunc)(0xbf75c0), cacheKey:\"3f48f30f-3eca-48c3-87e5-5bc3683bbcc7\"}","time":"2018-10-29T17:52:11Z"}
+{"go.version":"go1.8.3","instance.id":"0f60f5bc-a9e4-49bf-8f37-4f37b7660fe9","level":"info","msg":"Starting upload purge in 43m0s","time":"2018-10-29T17:52:11.148862043Z","version":"v2.6.0+unknown"}
+{"go.version":"go1.8.3","instance.id":"0f60f5bc-a9e4-49bf-8f37-4f37b7660fe9","level":"info","msg":"redis not configured","time":"2018-10-29T17:52:11.148894738Z","version":"v2.6.0+unknown"}
+{"go.version":"go1.8.3","instance.id":"0f60f5bc-a9e4-49bf-8f37-4f37b7660fe9","level":"info","msg":"listening on [::]:5000, tls","time":"2018-10-29T17:52:11.14962362Z","version":"v2.6.0+unknown"}

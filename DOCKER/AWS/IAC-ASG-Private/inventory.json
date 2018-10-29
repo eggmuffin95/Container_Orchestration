@@ -1,0 +1,20 @@
+{
+  "meetup42-worker": {
+    "hosts": [
+      "ec2-52-31-67-60.eu-west-1.compute.amazonaws.com"
+    ]
+  },
+  "meetup42-manager": {
+    "hosts": [
+      "ec2-34-246-201-67.eu-west-1.compute.amazonaws.com"
+    ]
+  },
+  "meetup42-dtr-worker": {
+    "hosts": [
+      "ec2-34-249-64-199.eu-west-1.compute.amazonaws.com"
+    ]
+  },
+  "_meta": {
+    "hostvars": {}
+  }
+}

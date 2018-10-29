@@ -1,0 +1,814 @@
+ansible-playbook --private-key=~/.ssh/keys/AWS_Perso/ydaniel.pem -i inventory install.yml
+ [WARNING]: The required python-logstash is not installed. pip install python-logstash
+
+
+PLAY [Install Ansible requirements (Python)] **********************************************************
+
+TASK [ansible-requirements : Check if apt-get is installed.] ******************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [ansible-requirements : Install python2 [apt-get].] **********************************************
+
+TASK [ansible-requirements : Check if yum is installed.] **********************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [ansible-requirements : Clean yum] ***************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [ansible-requirements : Install python2 [yum].] **************************************************
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+
+TASK [ansible-requirements : Check if zypper is installed.] *******************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [ansible-requirements : Install python2 [zypper].] ***********************************************
+
+TASK [ansible-requirements : Ensure python2 has been installed properly.] *****************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057]
+
+PLAY [Make sure windows hosts can be contacted] *******************************************************
+skipping: no hosts matched
+
+PLAY [all] ********************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-05b62cc2be58cfb8b]
+ok: [i-0f1e8aa77e668a057]
+
+TASK [validate : include_tasks] ***********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/validate/tasks/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [validate : include_tasks] ***********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/validate/tasks/RedHat/CentOS.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [validate : assert] ******************************************************************************
+ok: [i-0b2eca0674cb47b06] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [i-0f1e8aa77e668a057] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [i-05b62cc2be58cfb8b] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [validate : assert] ******************************************************************************
+ok: [i-0b2eca0674cb47b06] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [i-0f1e8aa77e668a057] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+ok: [i-05b62cc2be58cfb8b] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+PLAY [Format Docker storage] **************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+ok: [i-0b2eca0674cb47b06]
+
+TASK [docker-storage : Installation ( RedHat ).] ******************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-storage/tasks/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-storage : include_tasks] *****************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-storage/tasks/RedHat/CentOS.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-storage : set_fact] **********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-storage : set_fact] **********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-storage : mkfs opts] *********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-storage : mkfs.xfs] **********************************************************************
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-storage : Mount /var/lib/docker] *********************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-storage : set_fact] **********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-storage : Add storage-driver=devicemapper to docker_ee_daemon_options.] ******************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+PLAY [Install Docker EE] ******************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06] => (item=RedHat)
+ok: [i-0f1e8aa77e668a057] => (item=RedHat)
+ok: [i-05b62cc2be58cfb8b] => (item=RedHat)
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06] => (item=CentOS)
+ok: [i-0f1e8aa77e668a057] => (item=CentOS)
+ok: [i-05b62cc2be58cfb8b] => (item=CentOS)
+
+TASK [docker-ee : Install.] ***************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/install/main.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : Installation (RedHat).] *************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/install/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : include_tasks] **********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/install/.unix.pre.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : Set 'docker_ee_repository' fact.] ***************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Set 'docker_ee_package' fact.] ******************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Ensure old versions of Docker are not installed.] ***********************************
+ok: [i-0b2eca0674cb47b06] => (item=[u'containerd', u'docker', u'docker-ce', u'docker-common', u'docker-engine', u'docker-libnetwork', u'docker-runc', u'yast2-docker', u'runc'])
+ok: [i-0f1e8aa77e668a057] => (item=[u'containerd', u'docker', u'docker-ce', u'docker-common', u'docker-engine', u'docker-libnetwork', u'docker-runc', u'yast2-docker', u'runc'])
+ok: [i-05b62cc2be58cfb8b] => (item=[u'containerd', u'docker', u'docker-ce', u'docker-common', u'docker-engine', u'docker-libnetwork', u'docker-runc', u'yast2-docker', u'runc'])
+
+TASK [docker-ee : Get Kernel version] *****************************************************************
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Splitting out kernel version elements] **********************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Setting fact if kernel is < 3.10.x-514] *********************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Update if kernel < 3.10.0-514] ******************************************************
+
+TASK [docker-ee : Reboot the server] ******************************************************************
+
+TASK [docker-ee : Wait for server to shutdown] ********************************************************
+
+TASK [docker-ee : Wait for server to be ready] ********************************************************
+
+TASK [docker-ee : Add Docker EE URL to yum.] **********************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Install dependencies.] **************************************************************
+changed: [i-0b2eca0674cb47b06] => (item=[u'yum-utils', u'device-mapper-persistent-data', u'lvm2', u'chrony'])
+changed: [i-0f1e8aa77e668a057] => (item=[u'yum-utils', u'device-mapper-persistent-data', u'lvm2', u'chrony'])
+changed: [i-05b62cc2be58cfb8b] => (item=[u'yum-utils', u'device-mapper-persistent-data', u'lvm2', u'chrony'])
+
+TASK [docker-ee : Configure chrony on AWS] ************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ee : Remove existing pool config on AWS] *************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Enable chrony service on AWS] *******************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Enable extras] **********************************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Enable options] *********************************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Add Docker GPG key (from https://storebits.docker.com/ee/centos/sub-ac9b2101-ebf8-463b-9cf6-a2dfbee2d2c7/centos/gpg }}.] ***
+ [WARNING]: Module remote_tmp /root/.ansible/tmp did not exist and was created with a mode of 0700,
+this may cause issues when running as another user. To avoid this, create the remote_tmp dir with the
+correct permissions manually
+
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Ensure curl is present (on older systems without SNI).] *****************************
+
+TASK [docker-ee : Download GPG key (alternative for older systems without SNI).] **********************
+
+TASK [docker-ee : Add Docker apt key (alternative for older systems without SNI).] ********************
+
+TASK [docker-ee : Add Docker EE repository stable-latest.] ********************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ee : Install Docker EE (version: latest).] ***********************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Check for firewalld] ****************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Set firewalld_active fact] **********************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Open ports in firewalld for Docker EE] **********************************************
+
+TASK [docker-ee : Open ports in firewalld for Docker EE] **********************************************
+
+TASK [docker-ee : Restart Firewalld Service] **********************************************************
+
+TASK [docker-ee : Check the Firewall Port status] *****************************************************
+
+TASK [docker-ee : include_tasks] **********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/install/.unix.post.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : Ensure /etc/docker dir exists.] *****************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Configure additional engine options] ************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ee : Remove daemon config when empty] ****************************************************
+
+TASK [docker-ee : Get current user name (no sudo).] ***************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Adding existing user centos to group docker.] ***************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Test Docker.] ***********************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Reload service docker (if not already running)] *************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Enable service docker.] *************************************************************
+[DEPRECATION WARNING]: state=running is deprecated. Please use state=started. This feature will be
+removed in version 2.7. Deprecation warnings can be disabled by setting deprecation_warnings=False in
+ansible.cfg.
+[DEPRECATION WARNING]: state=running is deprecated. Please use state=started. This feature will be
+removed in version 2.7. Deprecation warnings can be disabled by setting deprecation_warnings=False in
+ansible.cfg.
+[DEPRECATION WARNING]: state=running is deprecated. Please use state=started. This feature will be
+removed in version 2.7. Deprecation warnings can be disabled by setting deprecation_warnings=False in
+ansible.cfg.
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Test Docker.] ***********************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Uninstall.] *************************************************************************
+
+TASK [docker-ee : Update.] ****************************************************************************
+
+TASK [docker-ee : Logs.] ******************************************************************************
+
+PLAY [extra] ******************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+
+TASK [host-readiness : Wait for host to be available] *************************************************
+
+PLAY [ucp-load-balancer] ******************************************************************************
+skipping: no hosts matched
+
+PLAY [dtr-load-balancer] ******************************************************************************
+skipping: no hosts matched
+
+PLAY [Initialize Swarm] *******************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Initialize.] *********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-swarm/tasks/init/main.yml for i-0f1e8aa77e668a057
+
+TASK [docker-swarm : Check if already active] *********************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Get advertise IP for swarm.] *****************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Show the IP we found] ************************************************************
+ok: [i-0f1e8aa77e668a057] => {
+    "eth0_ip": {
+        "changed": true,
+        "cmd": "ip route get 1.1.1.1 | awk 'NR==1 {print $NF}'",
+        "delta": "0:00:00.003748",
+        "end": "2018-10-29 17:44:48.512534",
+        "failed": false,
+        "rc": 0,
+        "start": "2018-10-29 17:44:48.508786",
+        "stderr": "",
+        "stderr_lines": [],
+        "stdout": "172.30.0.10",
+        "stdout_lines": [
+            "172.30.0.10"
+        ]
+    }
+}
+
+TASK [docker-swarm : Advertise the eth0 to be used] ***************************************************
+ok: [i-0f1e8aa77e668a057] => {
+    "msg": "Advertised IP is: 172.30.0.10"
+}
+
+TASK [docker-swarm : Initialize swarm.] ***************************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Export manager token.] ***********************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Export worker token.] ************************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Join.] ***************************************************************************
+
+TASK [docker-swarm : Validate.] ***********************************************************************
+
+TASK [docker-swarm : Leave.] **************************************************************************
+
+PLAY [Install UCP] ************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Install.] **************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ucp/tasks/install/main.yml for i-0f1e8aa77e668a057
+
+TASK [docker-ucp : Check if UCP is running.] **********************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Set ucp_already_running fact.] *****************************************************
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Pull UCP (version: latest).] *******************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Check for certificate  (at ssl_cert/cert.pem).] ************************************
+ok: [i-0f1e8aa77e668a057 -> localhost]
+
+TASK [docker-ucp : Create volume for certificates.] ***************************************************
+
+TASK [docker-ucp : Get volume path.] ******************************************************************
+
+TASK [docker-ucp : Copy certificate] ******************************************************************
+
+TASK [docker-ucp : Check for license file (at ).] *****************************************************
+ok: [i-0f1e8aa77e668a057 -> localhost]
+
+TASK [docker-ucp : set_fact] **************************************************************************
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Copy subscription.] ****************************************************************
+
+TASK [docker-ucp : Install UCP (version: latest).] ****************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Validate managers.] ****************************************************************
+
+TASK [docker-ucp : Validate workers.] *****************************************************************
+
+TASK [docker-ucp : Uninstall UCP.] ********************************************************************
+
+TASK [docker-ucp : Update UCP.] ***********************************************************************
+
+TASK [docker-ucp : Logs.] *****************************************************************************
+
+PLAY [Join Swarm (as managers)] ***********************************************************************
+skipping: no hosts matched
+
+PLAY [Join Swarm (as workers)] ************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-swarm : Initialize.] *********************************************************************
+
+TASK [docker-swarm : Join.] ***************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-swarm/tasks/join/main.yml for i-0b2eca0674cb47b06, i-05b62cc2be58cfb8b
+
+TASK [docker-swarm : Joining (RedHat).] ***************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-swarm/tasks/join/RedHat.yml for i-0b2eca0674cb47b06, i-05b62cc2be58cfb8b
+
+TASK [docker-swarm : Check if already active.] ********************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-swarm : Join Docker Swarm.] **************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-swarm : Validate.] ***********************************************************************
+
+TASK [docker-swarm : Leave.] **************************************************************************
+
+PLAY [Verify Swarm state (managers only)] *************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Initialize.] *********************************************************************
+
+TASK [docker-swarm : Join.] ***************************************************************************
+
+TASK [docker-swarm : Validate.] ***********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-swarm/tasks/validate/main.yml for i-0f1e8aa77e668a057
+
+TASK [docker-swarm : include_tasks] *******************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-swarm/tasks/cleanup/main.yml for i-0f1e8aa77e668a057
+
+TASK [docker-swarm : Clean up down nodes, if any.] ****************************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Get number of Docker Swarm workers.] *********************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : Get number of Docker Swarm managers.] ********************************************
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-swarm : assert] **************************************************************************
+ok: [i-0f1e8aa77e668a057] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [docker-swarm : Leave.] **************************************************************************
+
+PLAY [Install Cloudstor] ******************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [cloudstor-install : Check if plugin is already registered.] *************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+
+TASK [cloudstor-install : include_tasks] **************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/cloudstor-install/tasks/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [cloudstor-install : Install NFS support] ********************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [cloudstor-install : Install Cloudstor plugin] ***************************************************
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+PLAY [Verify UCP state (workers)] *********************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-05b62cc2be58cfb8b]
+ok: [i-0b2eca0674cb47b06]
+
+TASK [docker-ucp : Install.] **************************************************************************
+
+TASK [docker-ucp : Validate managers.] ****************************************************************
+
+TASK [docker-ucp : Validate workers.] *****************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ucp/tasks/validate-workers/main.yml for i-0b2eca0674cb47b06, i-05b62cc2be58cfb8b
+
+TASK [docker-ucp : include_tasks] *********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ucp/tasks/validate-workers/RedHat.yml for i-0b2eca0674cb47b06, i-05b62cc2be58cfb8b
+
+TASK [docker-ucp : Check for ucp-proxy container.] ****************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ucp : Uninstall UCP.] ********************************************************************
+
+TASK [docker-ucp : Update UCP.] ***********************************************************************
+
+TASK [docker-ucp : Logs.] *****************************************************************************
+
+PLAY [Install DTR] ************************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Install.] **************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-dtr/tasks/install/main.yml for i-05b62cc2be58cfb8b
+
+TASK [docker-dtr : Check if DTR is already running.] **************************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Set is_already_running fact.] ******************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Pull DTR (version: latest).] *******************************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : shell] *****************************************************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : include_tasks] *********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-dtr/tasks/get-running-replica-id.yml for i-05b62cc2be58cfb8b
+
+TASK [docker-dtr : Get running dtr-registry-<replica-id>.] ********************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Store replica id] ******************************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Reconfigure DTR.] ******************************************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Wait for Docker DTR to be accessible on 443.] **************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Configure S3 storage backend] ******************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Configure S3 storage backend] ******************************************************
+
+TASK [docker-dtr : include_tasks] *********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-dtr/tasks/get-running-replica-id.yml for i-05b62cc2be58cfb8b
+
+TASK [docker-dtr : Get running dtr-registry-<replica-id>.] ********************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Store replica id] ******************************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Update.] ***************************************************************************
+
+TASK [docker-dtr : Join.] *****************************************************************************
+
+TASK [docker-dtr : Get running replica id.] ***********************************************************
+
+TASK [docker-dtr : Uninstall.] ************************************************************************
+
+TASK [docker-dtr : Logs.] *****************************************************************************
+
+PLAY [Join DTR] ***************************************************************************************
+skipping: no hosts matched
+
+PLAY [all:!load-balancers] ****************************************************************************
+
+TASK [Gathering Facts] ********************************************************************************
+ok: [i-05b62cc2be58cfb8b]
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06] => (item=None)
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057] => (item=None)
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : include_vars] ***********************************************************************
+ok: [i-0b2eca0674cb47b06] => (item=None)
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057] => (item=None)
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Install.] ***************************************************************************
+
+TASK [docker-ee : Uninstall.] *************************************************************************
+
+TASK [docker-ee : Update.] ****************************************************************************
+
+TASK [docker-ee : Logs.] ******************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/logs/main.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : Get logs (RedHat).] *****************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/logs/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : include_tasks] **********************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ee/tasks/logs/RedHat/CentOS.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ee : Get logs.] **************************************************************************
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ee : Create folders.] ********************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ee : Save logs to file.] *****************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ucp : Install.] **************************************************************************
+
+TASK [docker-ucp : Validate managers.] ****************************************************************
+
+TASK [docker-ucp : Validate workers.] *****************************************************************
+
+TASK [docker-ucp : Uninstall UCP.] ********************************************************************
+
+TASK [docker-ucp : Update UCP.] ***********************************************************************
+
+TASK [docker-ucp : Logs.] *****************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ucp/tasks/logs/main.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ucp : Get.] ******************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-ucp/tasks/logs/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-ucp : Get logs.] *************************************************************************
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-0b2eca0674cb47b06] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0b2eca0674cb47b06] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057]
+changed: [i-0b2eca0674cb47b06] => (item=None)
+changed: [i-0b2eca0674cb47b06]
+
+TASK [docker-ucp : set_fact] **************************************************************************
+ok: [i-0b2eca0674cb47b06] => (item=None)
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057] => (item=None)
+ok: [i-0f1e8aa77e668a057] => (item=None)
+ok: [i-0f1e8aa77e668a057] => (item=None)
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ucp : Create folders.] *******************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-ucp : Save logs (stdout) to file.] *******************************************************
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-ucp : Save logs (stderr) to file.] *******************************************************
+changed: [i-0b2eca0674cb47b06] => (item=None)
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b]
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057]
+
+TASK [docker-dtr : Install.] **************************************************************************
+
+TASK [docker-dtr : Update.] ***************************************************************************
+
+TASK [docker-dtr : Join.] *****************************************************************************
+
+TASK [docker-dtr : Get running replica id.] ***********************************************************
+
+TASK [docker-dtr : Uninstall.] ************************************************************************
+
+TASK [docker-dtr : Logs.] *****************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-dtr/tasks/logs/main.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-dtr : Get.] ******************************************************************************
+included: /Users/eggmuffin/Documents/Container_Orchestration/DOCKER/AWS/IAC-EC2-Public/roles/docker-dtr/tasks/logs/RedHat.yml for i-0b2eca0674cb47b06, i-0f1e8aa77e668a057, i-05b62cc2be58cfb8b
+
+TASK [docker-dtr : Check if DTR is already running.] **************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Set 'running' fact.] ***************************************************************
+ok: [i-0b2eca0674cb47b06]
+ok: [i-0f1e8aa77e668a057]
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Get replica id] ********************************************************************
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Set 'current_replica_id' fact.] ****************************************************
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Get logs.] *************************************************************************
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : set_fact] **************************************************************************
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b] => (item=None)
+ok: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Create folders.] *******************************************************************
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Save logs (stdout) to file.] *******************************************************
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b]
+
+TASK [docker-dtr : Save logs (stderr) to file.] *******************************************************
+changed: [i-0b2eca0674cb47b06] => (item=None)
+changed: [i-0b2eca0674cb47b06]
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-0f1e8aa77e668a057] => (item=None)
+changed: [i-0f1e8aa77e668a057]
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b] => (item=None)
+changed: [i-05b62cc2be58cfb8b]
+
+PLAY RECAP ********************************************************************************************
+i-05b62cc2be58cfb8b        : ok=111  changed=50   unreachable=0    failed=0
+i-0b2eca0674cb47b06        : ok=91   changed=41   unreachable=0    failed=0
+i-0f1e8aa77e668a057        : ok=109  changed=51   unreachable=0    failed=0
