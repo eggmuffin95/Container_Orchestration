@@ -1,6 +1,6 @@
 These files allow to :
 
-# Deploy a full AWS infrastructure from network items to instances using Terraform and provide an automatic ansible dynamic inventory
+# Deploy a full AWS infrastructure from network items to instances using Terraform and provide an automatic and dynamic ansible inventory.
 
 ## You can specify your own values in tfvars file.
 ## To deploy, run the following commands :
@@ -8,7 +8,7 @@ These files allow to :
 - ```terraform plan -out=tfplan -input=false```
 - ```terraform apply "tfplan"```
 
-# Deploy a full Docker EE Orchestration Platform with UCP Master, DTR dedicated Workers Linux Workers and Windows Workers using Ansible 
+# Deploy a full Docker EE Orchestration Platform with UCP Master, DTR dedicated Workers Linux Workers and Windows Workers using Ansible.
 
 ## You can specify your own values in groupvars files.
 ## To run installation, just send the following command :
