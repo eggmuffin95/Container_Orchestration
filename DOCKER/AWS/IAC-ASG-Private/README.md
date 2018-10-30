@@ -23,11 +23,14 @@ Because this AWS platform is intended for private use, you should first deploy a
 
 Other playbooks are available in this project path and allow you to update or uninstall your Docker EE platform.
 
+Note that deploying more than one UCP Manager and/or DTR Worker will automatically provide a primary and secondary UCP Managers. For the DTR, it will deploy one DTR Master instance and replicas. 
+
 Despite you may change several AWS items network scheme, IAC-EC2-Pricate is intended for deploying a private only Docker Platform.
 
 Changing these values could bring failures especially during the Docker Installation process.
 Indeed, during the DTR setup, the DTR instance must reach the UCP Manager using its private IP.
 
-For public purpose, the project IAC-EC2-Public is the one to use.
+For public purpose, the project IAC-EC2-Public is the one to use. A IAC-ASG-Public project will be created later.
+
 
 NB: Considering this project, Terraform part is ready to use however there are still missing adaptions to work on the Ansible part. Stay tuned for updates considering it.

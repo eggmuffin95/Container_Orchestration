@@ -25,6 +25,8 @@ NB: The built-in Terraform Inventory module does not work with Auto-Scaling Grou
 
 Other playbooks are available in this project path and allow you to update or uninstall your Docker EE platform.
 
+Note that deploying more than one UCP Manager and/or DTR Worker will automatically provide a primary and secondary UCP Managers. For the DTR, it will deploy one DTR Master instance and replicas. 
+
 Despite you may change several AWS items network scheme, IAC-EC2-Public is intended for deploying a public reachable Docker Platform.
 
 Changing these values could bring failures especially during the Docker Installation process.
